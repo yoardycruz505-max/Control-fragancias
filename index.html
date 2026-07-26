@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Fragancias - Elegante</title>
-<link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,10 +16,13 @@
       --card-inner: #0f172a;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent-gold: #fbbf24;
-      --accent-gold-hover: #f59e0b;
-      --accent-emerald: #10b981;
-      --accent-rose: #f43f5e;
+      
+      /* COLORES PRONUNCIADOS / FLUORESCENTES / FUCSIA */
+      --accent-gold: #ffdd00; /* Amarillo bien pronunciado */
+      --accent-gold-hover: #ffea00;
+      --accent-emerald: #00ff88; /* Verde neón muy pronunciado */
+      --accent-rose: #ff007f; /* Rojo/Fucsia pronunciado */
+      
       --border-color: #334155;
       --input-bg: #0f172a;
     }
@@ -41,16 +44,41 @@
       padding-bottom: 40px;
     }
 
-    /* HEADER */
+    /* HEADER Y BOTONES SUPERIORES */
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .btn-icon {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.95);
+    }
+
     .header {
       text-align: center;
-      padding: 20px 0 15px 0;
+      padding: 10px 0 15px 0;
     }
 
     .header-title {
       font-size: 1.5rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #fbbf24 0%, #fef3c7 100%);
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #fef3c7 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.5px;
@@ -92,8 +120,8 @@
       letter-spacing: 0.5px;
     }
 
-    .val-cobrado { color: var(--accent-emerald); }
-    .val-pendiente { color: var(--accent-gold); }
+    .val-cobrado { color: var(--accent-emerald); text-shadow: 0 0 5px rgba(0,255,136,0.3); }
+    .val-pendiente { color: var(--accent-gold); text-shadow: 0 0 5px rgba(255,221,0,0.3); }
 
     /* FORM CARD */
     .card {
@@ -170,28 +198,28 @@
 
     .btn-mic.recording {
       background: var(--accent-rose);
-      border-color: #f43f5e;
+      border-color: var(--accent-rose);
       animation: pulse 1.2s infinite;
     }
 
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.6); }
-      70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 0, 127, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0); }
     }
 
     .btn-primary {
       width: 100%;
-      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #d97706 100%);
       color: #0f172a;
       border: none;
       border-radius: 12px;
       padding: 14px;
       font-size: 0.95rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       margin-top: 6px;
-      box-shadow: 0 4px 14px rgba(251, 191, 36, 0.25);
+      box-shadow: 0 4px 14px rgba(255, 221, 0, 0.25);
       transition: all 0.2s;
     }
 
@@ -250,16 +278,18 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 5px;
+      width: 6px;
       height: 100%;
     }
 
     .cliente-item.status-pendiente::before {
       background-color: var(--accent-gold);
+      box-shadow: 0 0 8px var(--accent-gold);
     }
 
     .cliente-item.status-cancelado::before {
       background-color: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
     }
 
     .item-header {
@@ -276,24 +306,27 @@
     }
 
     .badge {
-      font-size: 0.68rem;
-      font-weight: 700;
-      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 5px 10px;
       border-radius: 20px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .badge-pendiente {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
+      background: rgba(255, 221, 0, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid var(--accent-gold);
     }
 
     .badge-cancelado {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid var(--accent-emerald);
     }
 
     .item-details {
@@ -323,7 +356,7 @@
       margin-top: 1px;
     }
 
-    /* SECCIÓN INTEGRADA DE ABONOS CON FECHA/HORA A LA PAR */
+    /* SECCIÓN INTEGRADA DE ABONOS */
     .abonos-section {
       grid-column: 1 / -1;
       margin-top: 6px;
@@ -356,8 +389,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.15);
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.15);
       padding: 8px 10px;
       border-radius: 8px;
       margin-bottom: 6px;
@@ -389,29 +422,29 @@
       border-radius: 8px;
       border: none;
       font-size: 0.78rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       text-align: center;
       transition: all 0.2s;
     }
 
     .btn-abono-200 {
-      background: rgba(251, 191, 36, 0.2);
+      background: rgba(255, 221, 0, 0.15);
       color: var(--accent-gold);
-      border: 1px solid rgba(251, 191, 36, 0.4);
+      border: 1px solid var(--accent-gold);
     }
 
     .btn-pagar-todo {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(0, 255, 136, 0.15);
       color: var(--accent-emerald);
-      border: 1px solid rgba(16, 185, 129, 0.4);
+      border: 1px solid var(--accent-emerald);
     }
 
     .btn-delete {
       flex: 0 0 38px;
-      background: rgba(244, 63, 94, 0.15);
+      background: rgba(255, 0, 127, 0.15);
       color: var(--accent-rose);
-      border: 1px solid rgba(244, 63, 94, 0.3);
+      border: 1px solid var(--accent-rose);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -424,12 +457,82 @@
       color: var(--text-muted);
       font-size: 0.9rem;
     }
+
+    /* MODAL PAPELERA */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .modal-content {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 500px;
+      max-height: 85vh;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-rose);
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .btn-restore {
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid var(--accent-emerald);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
+  <!-- BOTONES SUPERIORES: PANTALLA COMPLETA Y PAPELERA -->
+  <div class="top-controls">
+    <button class="btn-icon" onclick="toggleFullScreen()">🔲 Pantalla Completa</button>
+    <button class="btn-icon" onclick="abrirPapelera()" style="color: var(--accent-rose); border-color: var(--accent-rose);">🗑️ Papelera</button>
+  </div>
+
   <div class="header">
-    <div class="header-title">✨ Perfumes & Fragancias</div>
+    <div class="header-title">✨ JESSY FRAGANCIA</div>
     <div class="header-sub">Gestión de Clientes y Cobros</div>
   </div>
 
@@ -487,9 +590,36 @@
   <!-- LISTADO DE CLIENTES -->
   <div id="listaClientes"></div>
 
+  <!-- MODAL DE PAPELERA DE RECICLAJE -->
+  <div id="modalPapelera" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">🗑️ Archivos Borrados</div>
+        <button class="btn-close" onclick="cerrarPapelera()">✖</button>
+      </div>
+      <div class="modal-body" id="listaPapeleraContenedor">
+        <!-- Contenido generado por JS -->
+      </div>
+    </div>
+  </div>
+
   <script>
     let ventas = JSON.parse(localStorage.getItem('ventas_fragancias_v2')) || [];
+    let papelera = JSON.parse(localStorage.getItem('papelera_fragancias_v2')) || [];
     let filtroActual = 'todos';
+
+    // PANTALLA COMPLETA
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`Error al iniciar pantalla completa: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
 
     // DICTADO POR VOZ
     function dictar(inputId, btnId) {
@@ -548,7 +678,6 @@
       guardarEnStorage();
       render();
 
-      // Limpiar campos
       document.getElementById('clienteInput').value = '';
       document.getElementById('fraganciaInput').value = '';
       document.getElementById('totalInput').value = '400';
@@ -583,15 +712,85 @@
       }
     }
 
-    // ELIMINAR CLIENTE
-    function eliminar(id) {
-      if (confirm("¿Seguro que querés eliminar este registro?")) {
-        ventas = ventas.filter(v => v.id !== id);
-        guardarEnStorage();
-        render();
+    // INGRESAR ABONO PERSONALIZADO
+    function abonarPersonalizado(id) {
+      const montoInput = prompt("¿Cuánto es el abono (en C$)?");
+      if (montoInput !== null && montoInput.trim() !== "") {
+        const monto = parseFloat(montoInput);
+        if (!isNaN(monto) && monto > 0) {
+          abonar(id, monto);
+        } else {
+          alert("Por favor, ingresá una cantidad válida mayor a 0.");
+        }
       }
     }
 
+    // ELIMINAR CLIENTE (MOVER A PAPELERA)
+    function eliminar(id) {
+      if (confirm("¿Seguro que querés enviar este registro a la papelera?")) {
+        const index = ventas.findIndex(v => v.id === id);
+        if (index !== -1) {
+          const itemEliminado = ventas.splice(index, 1)[0];
+          papelera.unshift(itemEliminado);
+          guardarEnStorage();
+          render();
+        }
+      }
+    }
+
+    // FUNCIONES DE LA PAPELERA
+    function abrirPapelera() {
+      document.getElementById('modalPapelera').style.display = 'flex';
+      renderPapelera();
+    }
+
+    function cerrarPapelera() {
+      document.getElementById('modalPapelera').style.display = 'none';
+    }
+
+    function restaurar(id) {
+      const index = papelera.findIndex(v => v.id === id);
+      if (index !== -1) {
+        const itemRecuperado = papelera.splice(index, 1)[0];
+        ventas.unshift(itemRecuperado);
+        guardarEnStorage();
+        render();
+        renderPapelera();
+      }
+    }
+
+    function vaciarPapelera() {
+      if(confirm("¿Seguro que quieres vaciar la papelera? Esta acción es definitiva.")) {
+        papelera = [];
+        guardarEnStorage();
+        renderPapelera();
+      }
+    }
+
+    function renderPapelera() {
+      const contenedor = document.getElementById('listaPapeleraContenedor');
+      if (papelera.length === 0) {
+        contenedor.innerHTML = '<div class="empty-state">La papelera está vacía.</div>';
+        return;
+      }
+
+      let html = `<button class="btn-action btn-delete" style="width:100%; margin-bottom: 10px;" onclick="vaciarPapelera()">🗑️ Vaciar Todo Definitivamente</button>`;
+      
+      papelera.forEach(v => {
+        html += `
+          <div class="cliente-item status-pendiente" style="border-color: var(--border-color);">
+            <div class="item-header">
+              <span class="client-name" style="color: var(--text-muted); text-decoration: line-through;">${v.cliente}</span>
+              <button class="btn-restore" onclick="restaurar(${v.id})">♻️ Restaurar</button>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Fragancia: ${v.fragancia} | Total: C$ ${v.total}</div>
+          </div>
+        `;
+      });
+      contenedor.innerHTML = html;
+    }
+
+    // FILTROS Y STORAGE
     function setFiltro(filtro) {
       filtroActual = filtro;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -601,6 +800,7 @@
 
     function guardarEnStorage() {
       localStorage.setItem('ventas_fragancias_v2', JSON.stringify(ventas));
+      localStorage.setItem('papelera_fragancias_v2', JSON.stringify(papelera));
     }
 
     function actualizarMetricas() {
@@ -616,7 +816,7 @@
       document.getElementById('metricPendiente').textContent = `C$ ${totalPendiente}`;
     }
 
-    // RENDERIZAR
+    // RENDERIZAR VISTA PRINCIPAL
     function render() {
       actualizarMetricas();
 
@@ -630,7 +830,6 @@
         const saldo = v.total - v.abonos;
 
         if (!coincideNombre) return false;
-
         if (filtroActual === 'pendientes') return saldo > 0;
         if (filtroActual === 'cancelados') return saldo <= 0;
 
@@ -665,7 +864,7 @@
           <div class="item-header">
             <span class="client-name">${v.cliente}</span>
             <span class="badge ${cancelado ? 'badge-cancelado' : 'badge-pendiente'}">
-              ${cancelado ? 'CANCELADO' : 'PENDIENTE'}
+              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE 😢'}
             </span>
           </div>
 
@@ -680,7 +879,7 @@
             </div>
             <div class="detail-row" style="grid-column: span 2;">
               <span class="detail-label">Saldo Restante</span>
-              <span class="detail-val" style="color:${cancelado ? 'var(--accent-emerald)' : 'var(--accent-gold)'};">C$ ${saldo}</span>
+              <span class="detail-val" style="color:${cancelado ? 'var(--accent-emerald)' : 'var(--accent-gold)'}; font-weight: 800; font-size: 1rem;">C$ ${saldo}</span>
             </div>
 
             <div class="abonos-section">
@@ -694,7 +893,7 @@
 
           <div class="actions-grid">
             ${!cancelado ? `
-              <button class="btn-action btn-abono-200" onclick="abonar(${v.id}, 200)">+ Abono C$ 200</button>
+              <button class="btn-action btn-abono-200" onclick="abonarPersonalizado(${v.id})">+ Ingresar Abono</button>
               <button class="btn-action btn-pagar-todo" onclick="abonar(${v.id}, ${saldo})">Pagar Saldo</button>
             ` : ''}
             <button class="btn-action btn-delete" onclick="eliminar(${v.id})">🗑️</button>
