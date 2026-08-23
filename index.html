@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Control de Fragancias - Elegante</title>
+  <title>Control de Fragancias - JESSY FRAGANCIA</title>
   <link rel="manifest" href="manifest.json">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,10 +18,10 @@
       --text-muted: #94a3b8;
       
       /* COLORES PRONUNCIADOS / FLUORESCENTES / FUCSIA */
-      --accent-gold: #ffdd00; /* Amarillo bien pronunciado */
-      --accent-gold-hover: #ffea00;
-      --accent-emerald: #00ff88; /* Verde neón muy pronunciado */
-      --accent-rose: #ff007f; /* Rojo/Fucsia pronunciado */
+      --accent-gold: #ffdd00;
+      --accent-emerald: #00ff88; 
+      --accent-rose: #ff007f; 
+      --accent-whatsapp: #25D366;
       
       --border-color: #334155;
       --input-bg: #0f172a;
@@ -71,23 +71,40 @@
     }
 
     .header {
-      text-align: center;
-      padding: 10px 0 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 10px 0 20px 0;
+    }
+
+    .header-logo {
+      width: 55px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+      border: 1px solid var(--accent-rose);
+    }
+
+    .header-text {
+      text-align: left;
     }
 
     .header-title {
       font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent-gold) 0%, #fef3c7 100%);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-rose) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .header-sub {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     /* METRIC CARDS */
@@ -249,10 +266,11 @@
       color: var(--text-muted);
       padding: 8px;
       border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 700;
       cursor: pointer;
       text-align: center;
+      transition: all 0.2s;
     }
 
     .tab-btn.active {
@@ -356,7 +374,6 @@
       margin-top: 1px;
     }
 
-    /* SECCIÓN INTEGRADA DE ABONOS */
     .abonos-section {
       grid-column: 1 / -1;
       margin-top: 6px;
@@ -434,10 +451,10 @@
       border: 1px solid var(--accent-gold);
     }
 
-    .btn-pagar-todo {
-      background: rgba(0, 255, 136, 0.15);
-      color: var(--accent-emerald);
-      border: 1px solid var(--accent-emerald);
+    .btn-whatsapp {
+      background: rgba(37, 211, 102, 0.15);
+      color: var(--accent-whatsapp);
+      border: 1px solid var(--accent-whatsapp);
     }
 
     .btn-delete {
@@ -456,6 +473,83 @@
       padding: 30px 10px;
       color: var(--text-muted);
       font-size: 0.9rem;
+    }
+
+    /* SECCIÓN DE RANKING Y ESTADÍSTICAS */
+    .ranking-section {
+      display: none; /* Se oculta por defecto, se activa por JS */
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .rank-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .rank-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 14px;
+      text-align: center;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .rank-item {
+      margin-bottom: 12px;
+    }
+
+    .rank-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f1f5f9;
+    }
+    
+    .rank-info span:last-child {
+      color: var(--accent-emerald);
+    }
+
+    .progress-track {
+      background: var(--card-inner);
+      border-radius: 10px;
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .fill-fragancia {
+      background: linear-gradient(90deg, var(--accent-gold) 0%, #d97706 100%);
+    }
+
+    .fill-cliente {
+      background: linear-gradient(90deg, var(--accent-rose) 0%, #9d004d 100%);
+    }
+
+    .vip-alert {
+      font-size: 0.7rem;
+      color: var(--accent-gold);
+      margin-top: 4px;
+      text-align: right;
+      font-weight: 700;
+      display: none; /* Se muestra si llega a 5 */
     }
 
     /* MODAL PAPELERA */
@@ -531,13 +625,17 @@
     <button class="btn-icon" onclick="abrirPapelera()" style="color: var(--accent-rose); border-color: var(--accent-rose);">🗑️ Papelera</button>
   </div>
 
+  <!-- HEADER ACTUALIZADO CON LOGO CORRECTO Y TEXTO -->
   <div class="header">
-    <div class="header-title">✨ JESSY FRAGANCIA</div>
-    <div class="header-sub">Gestión de Clientes y Cobros</div>
+    <img src="logo.png" alt="Logo JESSY FRAGANCIA" class="header-logo">
+    <div class="header-text">
+      <div class="header-title">JESSY FRAGANCIA</div>
+      <div class="header-sub">Gestión de Clientes y Cobros</div>
+    </div>
   </div>
 
   <!-- TARJETAS DE RESUMEN DE DINERO -->
-  <div class="metrics-grid">
+  <div class="metrics-grid" id="seccionMetricas">
     <div class="metric-card">
       <div class="metric-label">Total Recaudado</div>
       <div class="metric-value val-cobrado" id="metricCobrado">C$ 0</div>
@@ -549,7 +647,7 @@
   </div>
 
   <!-- REGISTRO DE VENTA -->
-  <div class="card">
+  <div class="card" id="seccionRegistro">
     <div class="card-title">➕ Nueva Venta</div>
 
     <div class="form-group">
@@ -563,7 +661,7 @@
     <div class="form-group">
       <label>Fragancia / Perfume</label>
       <div class="input-wrapper">
-        <input type="text" id="fraganciaInput" placeholder="Ej. Chanel N° 5">
+        <input type="text" id="fraganciaInput" placeholder="Ej. One Million">
         <button class="btn-mic" id="micFragancia" onclick="dictar('fraganciaInput', 'micFragancia')">🎙️</button>
       </div>
     </div>
@@ -577,18 +675,36 @@
   </div>
 
   <!-- BUSCADOR Y FILTROS -->
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 Buscar cliente..." oninput="render()">
+  <div class="search-box" id="seccionBuscador">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar cliente o perfume..." oninput="render()">
   </div>
 
   <div class="filter-tabs">
     <button class="tab-btn active" id="tab-todos" onclick="setFiltro('todos')">Todos</button>
     <button class="tab-btn" id="tab-pendientes" onclick="setFiltro('pendientes')">Pendientes</button>
     <button class="tab-btn" id="tab-cancelados" onclick="setFiltro('cancelados')">Cancelados</button>
+    <button class="tab-btn" id="tab-rankings" onclick="setFiltro('rankings')" style="color: var(--accent-rose); border-color: var(--accent-rose);">🏆 Rankings</button>
   </div>
 
-  <!-- LISTADO DE CLIENTES -->
+  <!-- CONTENEDORES PRINCIPALES -->
   <div id="listaClientes"></div>
+
+  <!-- MÓDULO DE RANKINGS (OCULTO POR DEFECTO) -->
+  <div id="seccionRankings" class="ranking-section">
+    
+    <!-- RANKING DE FRAGANCIAS -->
+    <div class="rank-card">
+      <div class="rank-title">💎 Top Perfumes Vendidos</div>
+      <div id="rankingFraganciasContenedor"></div>
+    </div>
+
+    <!-- RANKING DE CLIENTES VIP -->
+    <div class="rank-card">
+      <div class="rank-title">👑 Clientes VIP (Fidelidad)</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Meta: 5 compras para regalo sorpresa</div>
+      <div id="rankingClientesContenedor"></div>
+    </div>
+  </div>
 
   <!-- MODAL DE PAPELERA DE RECICLAJE -->
   <div id="modalPapelera" class="modal-overlay">
@@ -604,6 +720,7 @@
   </div>
 
   <script>
+    // AQUÍ ESTÁ EL CAMBIO: Usando los nombres de tu código original ("_v2")
     let ventas = JSON.parse(localStorage.getItem('ventas_fragancias_v2')) || [];
     let papelera = JSON.parse(localStorage.getItem('papelera_fragancias_v2')) || [];
     let filtroActual = 'todos';
@@ -683,7 +800,7 @@
       document.getElementById('totalInput').value = '400';
     }
 
-    // REGISTRAR ABONO CON FECHA Y HORA EXACTA
+    // REGISTRAR ABONO
     function abonar(id, monto) {
       const venta = ventas.find(v => v.id === id);
       if (venta) {
@@ -723,6 +840,34 @@
           alert("Por favor, ingresá una cantidad válida mayor a 0.");
         }
       }
+    }
+
+    // ENVIAR COMPROBANTE POR WHATSAPP CON MENSAJE VIP
+    function enviarWhatsApp(id) {
+      const venta = ventas.find(v => v.id === id);
+      if(!venta) return;
+
+      const saldo = venta.total - venta.abonos;
+      const estadoTxt = saldo <= 0 ? "¡CANCELADO TOTALMENTE! ✅" : `Pendiente: C$ ${saldo}`;
+
+      // Verificar historial del cliente para mensaje VIP
+      const nombreCliente = venta.cliente.trim().toLowerCase();
+      const comprasCliente = ventas.filter(v => v.cliente.trim().toLowerCase() === nombreCliente).length;
+
+      let msj = `Hola *${venta.cliente}*, aquí tienes el detalle de tu registro en *JESSY FRAGANCIA* ✨\n\n`;
+      msj += `🛍️ *Fragancia:* ${venta.fragancia}\n`;
+      msj += `💰 *Monto Total:* C$ ${venta.total}\n`;
+      msj += `💵 *Total Abonado:* C$ ${venta.abonos}\n`;
+      msj += `⚠️ *Estado Actual:* ${estadoTxt}\n\n`;
+
+      if (comprasCliente >= 5) {
+        msj += `🎁 *¡FELICIDADES!* Has alcanzado *${comprasCliente} compras* acumuladas con nosotros. Te has ganado un obsequio especial por tu fidelidad. ¡Reclámalo en tu próxima visita o escríbenos para coordinar!\n\n`;
+      }
+
+      msj += `¡Gracias por preferir JESSY FRAGANCIA!`;
+
+      const url = `https://wa.me/?text=${encodeURIComponent(msj)}`;
+      window.open(url, '_blank');
     }
 
     // ELIMINAR CLIENTE (MOVER A PAPELERA)
@@ -790,15 +935,29 @@
       contenedor.innerHTML = html;
     }
 
-    // FILTROS Y STORAGE
+    // FILTROS Y CONTROLES DE VISTA
     function setFiltro(filtro) {
       filtroActual = filtro;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(`tab-${filtro}`).classList.add('active');
-      render();
+      
+      if (filtro === 'rankings') {
+        document.getElementById('listaClientes').style.display = 'none';
+        document.getElementById('seccionRegistro').style.display = 'none';
+        document.getElementById('seccionBuscador').style.display = 'none';
+        document.getElementById('seccionRankings').style.display = 'block';
+        renderRankings();
+      } else {
+        document.getElementById('listaClientes').style.display = 'block';
+        document.getElementById('seccionRegistro').style.display = 'block';
+        document.getElementById('seccionBuscador').style.display = 'block';
+        document.getElementById('seccionRankings').style.display = 'none';
+        render();
+      }
     }
 
     function guardarEnStorage() {
+      // AQUÍ TAMBIÉN ESTÁ EL CAMBIO: Guardando en la carpeta de la versión 2
       localStorage.setItem('ventas_fragancias_v2', JSON.stringify(ventas));
       localStorage.setItem('papelera_fragancias_v2', JSON.stringify(papelera));
     }
@@ -816,9 +975,83 @@
       document.getElementById('metricPendiente').textContent = `C$ ${totalPendiente}`;
     }
 
-    // RENDERIZAR VISTA PRINCIPAL
+    // RENDERIZAR RANKINGS
+    function renderRankings() {
+      const contFragancias = document.getElementById('rankingFraganciasContenedor');
+      const contClientes = document.getElementById('rankingClientesContenedor');
+      
+      // Contar Fragancias
+      let conteoFragancias = {};
+      let conteoClientes = {};
+
+      ventas.forEach(v => {
+        let f = v.fragancia.trim().toUpperCase();
+        let c = v.cliente.trim().toUpperCase();
+        
+        conteoFragancias[f] = (conteoFragancias[f] || 0) + 1;
+        conteoClientes[c] = (conteoClientes[c] || 0) + 1;
+      });
+
+      // Ordenar arreglos
+      let arrFragancias = Object.keys(conteoFragancias).map(k => ({ nombre: k, cantidad: conteoFragancias[k] })).sort((a,b) => b.cantidad - a.cantidad);
+      let arrClientes = Object.keys(conteoClientes).map(k => ({ nombre: k, cantidad: conteoClientes[k] })).sort((a,b) => b.cantidad - a.cantidad);
+
+      // Maximos para el ancho de barra
+      let maxFragancias = arrFragancias.length > 0 ? arrFragancias[0].cantidad : 1;
+
+      // HTML Fragancias
+      if(arrFragancias.length === 0) {
+        contFragancias.innerHTML = '<div class="empty-state">No hay ventas registradas aún.</div>';
+      } else {
+        let htmlF = '';
+        arrFragancias.forEach(item => {
+          let porcentaje = (item.cantidad / maxFragancias) * 100;
+          htmlF += `
+            <div class="rank-item">
+              <div class="rank-info">
+                <span>${item.nombre}</span>
+                <span>${item.cantidad} und</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-fragancia" style="width: ${porcentaje}%"></div>
+              </div>
+            </div>
+          `;
+        });
+        contFragancias.innerHTML = htmlF;
+      }
+
+      // HTML Clientes VIP
+      if(arrClientes.length === 0) {
+        contClientes.innerHTML = '<div class="empty-state">No hay clientes registrados aún.</div>';
+      } else {
+        let htmlC = '';
+        arrClientes.forEach(item => {
+          // Lógica VIP: La barra se llena al llegar a 5.
+          let progreso = Math.min((item.cantidad / 5) * 100, 100);
+          let esVIP = item.cantidad >= 5;
+
+          htmlC += `
+            <div class="rank-item">
+              <div class="rank-info">
+                <span>${item.nombre} ${esVIP ? '👑' : ''}</span>
+                <span style="color: ${esVIP ? 'var(--accent-rose)' : 'var(--text-muted)'}">${item.cantidad}/5 compras</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-cliente" style="width: ${progreso}%; background: ${esVIP ? 'linear-gradient(90deg, #ff007f 0%, #ff007f 100%)' : ''}"></div>
+              </div>
+              <div class="vip-alert" style="display: ${esVIP ? 'block' : 'none'}">🎁 ¡Cliente listo para regalo!</div>
+            </div>
+          `;
+        });
+        contClientes.innerHTML = htmlC;
+      }
+    }
+
+    // RENDERIZAR VISTA PRINCIPAL (CLIENTES)
     function render() {
       actualizarMetricas();
+      if(filtroActual === 'rankings') return; // Si estamos en ranking no actualizamos la lista normal
 
       const contenedor = document.getElementById('listaClientes');
       const busqueda = document.getElementById('searchInput').value.toLowerCase();
@@ -830,6 +1063,8 @@
         const saldo = v.total - v.abonos;
 
         if (!coincideNombre) return false;
+        
+        // Logica de filtro automático de Cancelados
         if (filtroActual === 'pendientes') return saldo > 0;
         if (filtroActual === 'cancelados') return saldo <= 0;
 
@@ -837,7 +1072,7 @@
       });
 
       if (listaFiltrada.length === 0) {
-        contenedor.innerHTML = '<div class="empty-state">No hay registros que coincidan.</div>';
+        contenedor.innerHTML = '<div class="empty-state">No hay registros para mostrar.</div>';
         return;
       }
 
@@ -891,11 +1126,15 @@
             </div>
           </div>
 
+          <!-- BOTONES ACTUALIZADOS -->
           <div class="actions-grid">
             ${!cancelado ? `
               <button class="btn-action btn-abono-200" onclick="abonarPersonalizado(${v.id})">+ Ingresar Abono</button>
-              <button class="btn-action btn-pagar-todo" onclick="abonar(${v.id}, ${saldo})">Pagar Saldo</button>
             ` : ''}
+            
+            <!-- Botón de WhatsApp que reemplaza el de pagar todo -->
+            <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp(${v.id})">📲 WhatsApp</button>
+            
             <button class="btn-action btn-delete" onclick="eliminar(${v.id})">🗑️</button>
           </div>
         `;
@@ -904,7 +1143,10 @@
       });
     }
 
-    render();
+    // Inicializar app
+    if(filtroActual !== 'rankings') {
+      render();
+    }
   </script>
 </body>
 </html>
