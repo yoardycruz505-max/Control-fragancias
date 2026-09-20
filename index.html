@@ -17,7 +17,6 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       
-      /* COLORES PRONUNCIADOS / FLUORESCENTES / FUCSIA */
       --accent-gold: #ffdd00;
       --accent-emerald: #00ff88; 
       --accent-rose: #ff007f; 
@@ -44,7 +43,6 @@
       padding-bottom: 40px;
     }
 
-    /* HEADER Y BOTONES SUPERIORES */
     .top-controls {
       display: flex;
       justify-content: space-between;
@@ -107,7 +105,6 @@
       letter-spacing: 1px;
     }
 
-    /* METRIC CARDS */
     .metrics-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -140,7 +137,6 @@
     .val-cobrado { color: var(--accent-emerald); text-shadow: 0 0 5px rgba(0,255,136,0.3); }
     .val-pendiente { color: var(--accent-gold); text-shadow: 0 0 5px rgba(255,221,0,0.3); }
 
-    /* FORM CARD */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -244,7 +240,6 @@
       transform: scale(0.98);
     }
 
-    /* SEARCH & FILTER */
     .search-box {
       margin-bottom: 14px;
     }
@@ -279,7 +274,6 @@
       border-color: var(--accent-gold);
     }
 
-    /* CLIENT CARDS LIST */
     .cliente-item {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -317,10 +311,24 @@
       margin-bottom: 8px;
     }
 
+    .client-name-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .client-name {
       font-size: 1.05rem;
       font-weight: 700;
       color: #f8fafc;
+    }
+
+    .btn-edit-name {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
     }
 
     .badge {
@@ -346,6 +354,20 @@
       color: var(--accent-emerald);
       border: 1px solid var(--accent-emerald);
     }
+
+    .badge-rango {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    .rango-bronce { background: #78350f; color: #fef3c7; }
+    .rango-plata { background: #475569; color: #f8fafc; }
+    .rango-oro { background: #b45309; color: #fef08a; }
+    .rango-vip { background: var(--accent-rose); color: #ffffff; box-shadow: 0 0 8px var(--accent-rose); }
 
     .item-details {
       background: var(--card-inner);
@@ -475,9 +497,8 @@
       font-size: 0.9rem;
     }
 
-    /* SECCIÓN DE RANKING Y ESTADÍSTICAS */
     .ranking-section {
-      display: none; /* Se oculta por defecto, se activa por JS */
+      display: none;
       animation: fadeIn 0.3s ease-in;
     }
 
@@ -549,10 +570,8 @@
       margin-top: 4px;
       text-align: right;
       font-weight: 700;
-      display: none; /* Se muestra si llega a 5 */
     }
 
-    /* MODAL PAPELERA */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -619,13 +638,11 @@
 </head>
 <body>
 
-  <!-- BOTONES SUPERIORES: PANTALLA COMPLETA Y PAPELERA -->
   <div class="top-controls">
-    <button class="btn-icon" onclick="toggleFullScreen()">🔲 Pantalla Completa</button>
+    <button class="btn-icon" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
     <button class="btn-icon" onclick="abrirPapelera()" style="color: var(--accent-rose); border-color: var(--accent-rose);">🗑️ Papelera</button>
   </div>
 
-  <!-- HEADER ACTUALIZADO CON LOGO CORRECTO Y TEXTO -->
   <div class="header">
     <img src="logo.png" alt="Logo JESSY FRAGANCIA" class="header-logo">
     <div class="header-text">
@@ -634,7 +651,6 @@
     </div>
   </div>
 
-  <!-- TARJETAS DE RESUMEN DE DINERO -->
   <div class="metrics-grid" id="seccionMetricas">
     <div class="metric-card">
       <div class="metric-label">Total Recaudado</div>
@@ -646,7 +662,6 @@
     </div>
   </div>
 
-  <!-- REGISTRO DE VENTA -->
   <div class="card" id="seccionRegistro">
     <div class="card-title">➕ Nueva Venta</div>
 
@@ -674,58 +689,48 @@
     <button class="btn-primary" onclick="guardarVenta()">Guardar Venta</button>
   </div>
 
-  <!-- BUSCADOR Y FILTROS -->
   <div class="search-box" id="seccionBuscador">
     <input type="text" id="searchInput" placeholder="🔍 Buscar cliente o perfume..." oninput="render()">
   </div>
 
   <div class="filter-tabs">
-    <button class="tab-btn active" id="tab-todos" onclick="setFiltro('todos')">Todos</button>
-    <button class="tab-btn" id="tab-pendientes" onclick="setFiltro('pendientes')">Pendientes</button>
+    <button class="tab-btn active" id="tab-pendientes" onclick="setFiltro('pendientes')">Pendientes</button>
     <button class="tab-btn" id="tab-cancelados" onclick="setFiltro('cancelados')">Cancelados</button>
     <button class="tab-btn" id="tab-rankings" onclick="setFiltro('rankings')" style="color: var(--accent-rose); border-color: var(--accent-rose);">🏆 Rankings</button>
   </div>
 
-  <!-- CONTENEDORES PRINCIPALES -->
   <div id="listaClientes"></div>
 
-  <!-- MÓDULO DE RANKINGS (OCULTO POR DEFECTO) -->
   <div id="seccionRankings" class="ranking-section">
-    
-    <!-- RANKING DE FRAGANCIAS -->
     <div class="rank-card">
-      <div class="rank-title">💎 Top Perfumes Vendidos</div>
+      <div class="rank-title">🧪 Top Perfumes Vendidos (Permanente)</div>
       <div id="rankingFraganciasContenedor"></div>
     </div>
 
-    <!-- RANKING DE CLIENTES VIP -->
     <div class="rank-card">
-      <div class="rank-title">👑 Clientes VIP (Fidelidad)</div>
-      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Meta: 5 compras para regalo sorpresa</div>
+      <div class="rank-title">👑 Clientes VIP & Rangos</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Premios cíclicos cada 5 compras</div>
       <div id="rankingClientesContenedor"></div>
     </div>
   </div>
 
-  <!-- MODAL DE PAPELERA DE RECICLAJE -->
   <div id="modalPapelera" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-title">🗑️ Archivos Borrados</div>
         <button class="btn-close" onclick="cerrarPapelera()">✖</button>
       </div>
-      <div class="modal-body" id="listaPapeleraContenedor">
-        <!-- Contenido generado por JS -->
-      </div>
+      <div class="modal-body" id="listaPapeleraContenedor"></div>
     </div>
   </div>
 
   <script>
-    // AQUÍ ESTÁ EL CAMBIO: Usando los nombres de tu código original ("_v2")
     let ventas = JSON.parse(localStorage.getItem('ventas_fragancias_v2')) || [];
     let papelera = JSON.parse(localStorage.getItem('papelera_fragancias_v2')) || [];
-    let filtroActual = 'todos';
+    let rankingPermanenteFragancias = JSON.parse(localStorage.getItem('ranking_permanente_perfumes_v2')) || {};
+    
+    let filtroActual = 'pendientes';
 
-    // PANTALLA COMPLETA
     function toggleFullScreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -738,11 +743,10 @@
       }
     }
 
-    // DICTADO POR VOZ
     function dictar(inputId, btnId) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Tu navegador no soporta micrófono directo. Probá usar el teclado por voz de Google.");
+        alert("Tu navegador no soporta micrófono directo. Probá usar el teclado por voz.");
         return;
       }
 
@@ -750,27 +754,15 @@
       recognition.lang = 'es-NI';
       const btn = document.getElementById(btnId);
 
-      recognition.onstart = () => {
-        btn.classList.add('recording');
-      };
-
-      recognition.onend = () => {
-        btn.classList.remove('recording');
-      };
-
+      recognition.onstart = () => { btn.classList.add('recording'); };
+      recognition.onend = () => { btn.classList.remove('recording'); };
       recognition.onresult = (event) => {
-        const texto = event.results[0][0].transcript;
-        document.getElementById(inputId).value = texto;
+        document.getElementById(inputId).value = event.results[0][0].transcript;
       };
-
-      recognition.onerror = () => {
-        btn.classList.remove('recording');
-      };
-
+      recognition.onerror = () => { btn.classList.remove('recording'); };
       recognition.start();
     }
 
-    // GUARDAR VENTA
     function guardarVenta() {
       const cliente = document.getElementById('clienteInput').value.trim();
       const fragancia = document.getElementById('fraganciaInput').value.trim();
@@ -792,7 +784,12 @@
       };
 
       ventas.unshift(nuevaVenta);
+
+      let fKey = fragancia.trim().toUpperCase();
+      rankingPermanenteFragancias[fKey] = (rankingPermanenteFragancias[fKey] || 0) + 1;
+
       guardarEnStorage();
+      verificarPremioCliente(cliente);
       render();
 
       document.getElementById('clienteInput').value = '';
@@ -800,7 +797,35 @@
       document.getElementById('totalInput').value = '400';
     }
 
-    // REGISTRAR ABONO
+    function verificarPremioCliente(nombreCliente) {
+      const key = nombreCliente.trim().toLowerCase();
+      const totalCompras = ventas.filter(v => v.cliente.trim().toLowerCase() === key).length;
+      if (totalCompras > 0 && totalCompras % 5 === 0) {
+        setTimeout(() => {
+          alert(`🎉 ¡FELICIDADES! ${nombreCliente} acaba de alcanzar ${totalCompras} compras.\n\n🎁 ¡Ha ganado su premio por fidelidad de 5 perfumes y asciende de Rango!`);
+        }, 300);
+      }
+    }
+
+    function editarNombreCliente(nombreActual) {
+      const nuevoNombre = prompt("Modificar nombre del cliente:", nombreActual);
+      if (nuevoNombre !== null && nuevoNombre.trim() !== "" && nuevoNombre.trim() !== nombreActual) {
+        const nombreLimpio = nuevoNombre.trim();
+        let actualizados = 0;
+
+        ventas.forEach(v => {
+          if (v.cliente.trim().toLowerCase() === nombreActual.trim().toLowerCase()) {
+            v.cliente = nombreLimpio;
+            actualizados++;
+          }
+        });
+
+        guardarEnStorage();
+        render();
+        alert(`Se actualizó el nombre a "${nombreLimpio}" en ${actualizados} registros.`);
+      }
+    }
+
     function abonar(id, monto) {
       const venta = ventas.find(v => v.id === id);
       if (venta) {
@@ -817,11 +842,10 @@
         const ahora = new Date();
         const fechaFormateada = ahora.toLocaleDateString('es-NI', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const horaFormateada = ahora.toLocaleTimeString('es-NI', { hour: '2-digit', minute: '2-digit', hour12: true });
-        const fechaHora = `${fechaFormateada} - ${horaFormateada}`;
 
         venta.historialAbonos.push({
           monto: montoEfectivo,
-          fecha: fechaHora
+          fecha: `${fechaFormateada} - ${horaFormateada}`
         });
 
         guardarEnStorage();
@@ -829,7 +853,6 @@
       }
     }
 
-    // INGRESAR ABONO PERSONALIZADO
     function abonarPersonalizado(id) {
       const montoInput = prompt("¿Cuánto es el abono (en C$)?");
       if (montoInput !== null && montoInput.trim() !== "") {
@@ -842,7 +865,6 @@
       }
     }
 
-    // ENVIAR COMPROBANTE POR WHATSAPP CON MENSAJE VIP
     function enviarWhatsApp(id) {
       const venta = ventas.find(v => v.id === id);
       if(!venta) return;
@@ -850,27 +872,27 @@
       const saldo = venta.total - venta.abonos;
       const estadoTxt = saldo <= 0 ? "¡CANCELADO TOTALMENTE! ✅" : `Pendiente: C$ ${saldo}`;
 
-      // Verificar historial del cliente para mensaje VIP
       const nombreCliente = venta.cliente.trim().toLowerCase();
       const comprasCliente = ventas.filter(v => v.cliente.trim().toLowerCase() === nombreCliente).length;
 
       let msj = `Hola *${venta.cliente}*, aquí tienes el detalle de tu registro en *JESSY FRAGANCIA* ✨\n\n`;
-      msj += `🛍️ *Fragancia:* ${venta.fragancia}\n`;
-      msj += `💰 *Monto Total:* C$ ${venta.total}\n`;
-      msj += `💵 *Total Abonado:* C$ ${venta.abonos}\n`;
+      msj += `🧪 *Fragancia:* ${venta.fragancia}\n`;
+      msj += `💵 *Monto Total:* C$ ${venta.total}\n`;
+      msj += `💸 *Total Abonado:* C$ ${venta.abonos}\n`;
       msj += `⚠️ *Estado Actual:* ${estadoTxt}\n\n`;
 
-      if (comprasCliente >= 5) {
-        msj += `🎁 *¡FELICIDADES!* Has alcanzado *${comprasCliente} compras* acumuladas con nosotros. Te has ganado un obsequio especial por tu fidelidad. ¡Reclámalo en tu próxima visita o escríbenos para coordinar!\n\n`;
+      if (comprasCliente % 5 === 0 && comprasCliente > 0) {
+        msj += `🎁 *¡FELICIDADES!* Has alcanzado *${comprasCliente} compras* acumuladas. ¡Tienes un premio esperándote por tu fidelidad!\n\n`;
+      } else {
+        const faltantes = 5 - (comprasCliente % 5);
+        msj += `⭐ Llevarás *${comprasCliente} perfume(s)* acumulados. Te faltan solo *${faltantes}* para tu próximo regalo sorpresa.\n\n`;
       }
 
       msj += `¡Gracias por preferir JESSY FRAGANCIA!`;
 
-      const url = `https://wa.me/?text=${encodeURIComponent(msj)}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/?text=${encodeURIComponent(msj)}`, '_blank');
     }
 
-    // ELIMINAR CLIENTE (MOVER A PAPELERA)
     function eliminar(id) {
       if (confirm("¿Seguro que querés enviar este registro a la papelera?")) {
         const index = ventas.findIndex(v => v.id === id);
@@ -883,7 +905,6 @@
       }
     }
 
-    // FUNCIONES DE LA PAPELERA
     function abrirPapelera() {
       document.getElementById('modalPapelera').style.display = 'flex';
       renderPapelera();
@@ -926,7 +947,7 @@
           <div class="cliente-item status-pendiente" style="border-color: var(--border-color);">
             <div class="item-header">
               <span class="client-name" style="color: var(--text-muted); text-decoration: line-through;">${v.cliente}</span>
-              <button class="btn-restore" onclick="restaurar(${v.id})">♻️ Restaurar</button>
+              <button class="btn-restore" onclick="restaurar(${v.id})">🔄 Restaurar</button>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Fragancia: ${v.fragancia} | Total: C$ ${v.total}</div>
           </div>
@@ -935,7 +956,6 @@
       contenedor.innerHTML = html;
     }
 
-    // FILTROS Y CONTROLES DE VISTA
     function setFiltro(filtro) {
       filtroActual = filtro;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -957,9 +977,9 @@
     }
 
     function guardarEnStorage() {
-      // AQUÍ TAMBIÉN ESTÁ EL CAMBIO: Guardando en la carpeta de la versión 2
       localStorage.setItem('ventas_fragancias_v2', JSON.stringify(ventas));
       localStorage.setItem('papelera_fragancias_v2', JSON.stringify(papelera));
+      localStorage.setItem('ranking_permanente_perfumes_v2', JSON.stringify(rankingPermanenteFragancias));
     }
 
     function actualizarMetricas() {
@@ -975,31 +995,41 @@
       document.getElementById('metricPendiente').textContent = `C$ ${totalPendiente}`;
     }
 
-    // RENDERIZAR RANKINGS
+    function obtenerInfoRango(totalCompras) {
+      let rango = "Bronce";
+      let claseRango = "rango-bronce";
+
+      if (totalCompras >= 15) { rango = "VIP Gold"; claseRango = "rango-vip"; }
+      else if (totalCompras >= 10) { rango = "Oro"; claseRango = "rango-oro"; }
+      else if (totalCompras >= 5) { rango = "Plata"; claseRango = "rango-plata"; }
+
+      let progresoEnCiclo = totalCompras % 5;
+      if (progresoEnCiclo === 0 && totalCompras > 0) progresoEnCiclo = 5;
+
+      return { rango, claseRango, progresoEnCiclo };
+    }
+
     function renderRankings() {
       const contFragancias = document.getElementById('rankingFraganciasContenedor');
       const contClientes = document.getElementById('rankingClientesContenedor');
       
-      // Contar Fragancias
-      let conteoFragancias = {};
-      let conteoClientes = {};
-
+      let conteoFragancias = { ...rankingPermanenteFragancias };
       ventas.forEach(v => {
         let f = v.fragancia.trim().toUpperCase();
-        let c = v.cliente.trim().toUpperCase();
-        
-        conteoFragancias[f] = (conteoFragancias[f] || 0) + 1;
+        if(!conteoFragancias[f]) conteoFragancias[f] = 1;
+      });
+
+      let conteoClientes = {};
+      ventas.forEach(v => {
+        let c = v.cliente.trim();
         conteoClientes[c] = (conteoClientes[c] || 0) + 1;
       });
 
-      // Ordenar arreglos
       let arrFragancias = Object.keys(conteoFragancias).map(k => ({ nombre: k, cantidad: conteoFragancias[k] })).sort((a,b) => b.cantidad - a.cantidad);
       let arrClientes = Object.keys(conteoClientes).map(k => ({ nombre: k, cantidad: conteoClientes[k] })).sort((a,b) => b.cantidad - a.cantidad);
 
-      // Maximos para el ancho de barra
       let maxFragancias = arrFragancias.length > 0 ? arrFragancias[0].cantidad : 1;
 
-      // HTML Fragancias
       if(arrFragancias.length === 0) {
         contFragancias.innerHTML = '<div class="empty-state">No hay ventas registradas aún.</div>';
       } else {
@@ -1021,26 +1051,25 @@
         contFragancias.innerHTML = htmlF;
       }
 
-      // HTML Clientes VIP
       if(arrClientes.length === 0) {
         contClientes.innerHTML = '<div class="empty-state">No hay clientes registrados aún.</div>';
       } else {
         let htmlC = '';
         arrClientes.forEach(item => {
-          // Lógica VIP: La barra se llena al llegar a 5.
-          let progreso = Math.min((item.cantidad / 5) * 100, 100);
-          let esVIP = item.cantidad >= 5;
+          let infoRango = obtenerInfoRango(item.cantidad);
+          let porcentajeBarra = (infoRango.progresoEnCiclo / 5) * 100;
+          let listoRegalo = (item.cantidad % 5 === 0 && item.cantidad > 0);
 
           htmlC += `
             <div class="rank-item">
               <div class="rank-info">
-                <span>${item.nombre} ${esVIP ? '👑' : ''}</span>
-                <span style="color: ${esVIP ? 'var(--accent-rose)' : 'var(--text-muted)'}">${item.cantidad}/5 compras</span>
+                <span>${item.nombre} <span class="badge-rango ${infoRango.claseRango}">${infoRango.rango}</span></span>
+                <span style="color: ${listoRegalo ? 'var(--accent-rose)' : 'var(--text-muted)'}">${item.cantidad} totales (${infoRango.progresoEnCiclo}/5 meta)</span>
               </div>
               <div class="progress-track">
-                <div class="progress-fill fill-cliente" style="width: ${progreso}%; background: ${esVIP ? 'linear-gradient(90deg, #ff007f 0%, #ff007f 100%)' : ''}"></div>
+                <div class="progress-fill fill-cliente" style="width: ${porcentajeBarra}%; background: ${listoRegalo ? 'var(--accent-rose)' : ''}"></div>
               </div>
-              <div class="vip-alert" style="display: ${esVIP ? 'block' : 'none'}">🎁 ¡Cliente listo para regalo!</div>
+              ${listoRegalo ? '<div class="vip-alert">🎁 ¡Premio ganado! Entregar obsequio.</div>' : ''}
             </div>
           `;
         });
@@ -1048,10 +1077,9 @@
       }
     }
 
-    // RENDERIZAR VISTA PRINCIPAL (CLIENTES)
     function render() {
       actualizarMetricas();
-      if(filtroActual === 'rankings') return; // Si estamos en ranking no actualizamos la lista normal
+      if(filtroActual === 'rankings') return;
 
       const contenedor = document.getElementById('listaClientes');
       const busqueda = document.getElementById('searchInput').value.toLowerCase();
@@ -1064,7 +1092,6 @@
 
         if (!coincideNombre) return false;
         
-        // Logica de filtro automático de Cancelados
         if (filtroActual === 'pendientes') return saldo > 0;
         if (filtroActual === 'cancelados') return saldo <= 0;
 
@@ -1079,6 +1106,10 @@
       listaFiltrada.forEach(v => {
         const saldo = v.total - v.abonos;
         const cancelado = saldo <= 0;
+
+        const keyCliente = v.cliente.trim().toLowerCase();
+        const totalComprasCliente = ventas.filter(x => x.cliente.trim().toLowerCase() === keyCliente).length;
+        const infoRango = obtenerInfoRango(totalComprasCliente);
 
         const card = document.createElement('div');
         card.className = `cliente-item ${cancelado ? 'status-cancelado' : 'status-pendiente'}`;
@@ -1097,9 +1128,13 @@
 
         card.innerHTML = `
           <div class="item-header">
-            <span class="client-name">${v.cliente}</span>
+            <div class="client-name-container">
+              <span class="client-name">${v.cliente}</span>
+              <button class="btn-edit-name" onclick="editarNombreCliente('${v.cliente.replace(/'/g, "\\'")}')" title="Editar nombre">✏️</button>
+              <span class="badge-rango ${infoRango.claseRango}">${infoRango.rango}</span>
+            </div>
             <span class="badge ${cancelado ? 'badge-cancelado' : 'badge-pendiente'}">
-              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE 😢'}
+              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE ⏳'}
             </span>
           </div>
 
@@ -1126,15 +1161,11 @@
             </div>
           </div>
 
-          <!-- BOTONES ACTUALIZADOS -->
           <div class="actions-grid">
             ${!cancelado ? `
               <button class="btn-action btn-abono-200" onclick="abonarPersonalizado(${v.id})">+ Ingresar Abono</button>
             ` : ''}
-            
-            <!-- Botón de WhatsApp que reemplaza el de pagar todo -->
             <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp(${v.id})">📲 WhatsApp</button>
-            
             <button class="btn-action btn-delete" onclick="eliminar(${v.id})">🗑️</button>
           </div>
         `;
@@ -1143,10 +1174,7 @@
       });
     }
 
-    // Inicializar app
-    if(filtroActual !== 'rankings') {
-      render();
-    }
+    render();
   </script>
 </body>
 </html>

@@ -1,24 +1,20 @@
 {
-  "name": "Jessy Fragancia - Gestión",
-  "short_name": "Fragancias",
-  "description": "Control de ventas y abonos de Jessy Fragancia",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "orientation": "portrait",
+  "short_name": "JESSY",
+  "name": "Control de Fragancias - JESSY FRAGANCIA",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
+      "src": "logo.png",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192"
     },
     {
-      "src": "icon-512.png",
-      "sizes": "512x512",
+      "src": "logo.png",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "512x512"
     }
-  ]
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone"
 }
