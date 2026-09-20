@@ -532,6 +532,7 @@
     .rank-info {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 0.85rem;
       font-weight: 600;
       margin-bottom: 4px;
@@ -826,6 +827,41 @@
       }
     }
 
+    function editarNombreFragancia(nombreActual) {
+      const nuevoNombre = prompt("Modificar nombre de la fragancia (esto unificará todos los registros):", nombreActual);
+      if (nuevoNombre !== null && nuevoNombre.trim() !== "" && nuevoNombre.trim().toUpperCase() !== nombreActual.toUpperCase()) {
+        const nombreLimpio = nuevoNombre.trim();
+        const upperNuevo = nombreLimpio.toUpperCase();
+        const upperViejo = nombreActual.toUpperCase();
+
+        let actualizados = 0;
+
+        // Actualizar en todas las ventas
+        ventas.forEach(v => {
+          if (v.fragancia.trim().toUpperCase() === upperViejo) {
+            v.fragancia = nombreLimpio;
+            actualizados++;
+          }
+        });
+
+        // Actualizar en papelera
+        papelera.forEach(v => {
+          if (v.fragancia.trim().toUpperCase() === upperViejo) {
+            v.fragancia = nombreLimpio;
+          }
+        });
+
+        // Mover el contador al nuevo nombre unificando cantidades
+        let cantidadVieja = rankingPermanenteFragancias[upperViejo] || 0;
+        delete rankingPermanenteFragancias[upperViejo];
+        rankingPermanenteFragancias[upperNuevo] = (rankingPermanenteFragancias[upperNuevo] || 0) + cantidadVieja;
+
+        guardarEnStorage();
+        renderRankings(); 
+        alert(`Se actualizó a "${nombreLimpio}" en ${actualizados} registros. El ranking ha sido unificado.`);
+      }
+    }
+
     function abonar(id, monto) {
       const venta = ventas.find(v => v.id === id);
       if (venta) {
@@ -1013,11 +1049,10 @@
       const contFragancias = document.getElementById('rankingFraganciasContenedor');
       const contClientes = document.getElementById('rankingClientesContenedor');
       
-      let conteoFragancias = { ...rankingPermanenteFragancias };
-      ventas.forEach(v => {
-        let f = v.fragancia.trim().toUpperCase();
-        if(!conteoFragancias[f]) conteoFragancias[f] = 1;
-      });
+      // Ranking agrupado permanentemente
+      let arrFragancias = Object.keys(rankingPermanenteFragancias)
+        .map(k => ({ nombre: k, cantidad: rankingPermanenteFragancias[k] }))
+        .sort((a,b) => b.cantidad - a.cantidad);
 
       let conteoClientes = {};
       ventas.forEach(v => {
@@ -1025,7 +1060,6 @@
         conteoClientes[c] = (conteoClientes[c] || 0) + 1;
       });
 
-      let arrFragancias = Object.keys(conteoFragancias).map(k => ({ nombre: k, cantidad: conteoFragancias[k] })).sort((a,b) => b.cantidad - a.cantidad);
       let arrClientes = Object.keys(conteoClientes).map(k => ({ nombre: k, cantidad: conteoClientes[k] })).sort((a,b) => b.cantidad - a.cantidad);
 
       let maxFragancias = arrFragancias.length > 0 ? arrFragancias[0].cantidad : 1;
@@ -1039,7 +1073,10 @@
           htmlF += `
             <div class="rank-item">
               <div class="rank-info">
-                <span>${item.nombre}</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span>${item.nombre}</span>
+                  <button class="btn-edit-name" onclick="editarNombreFragancia('${item.nombre.replace(/'/g, "\\'")}')" title="Editar y unificar nombre">✏️</button>
+                </div>
                 <span>${item.cantidad} und</span>
               </div>
               <div class="progress-track">
@@ -1134,7 +1171,7 @@
               <span class="badge-rango ${infoRango.claseRango}">${infoRango.rango}</span>
             </div>
             <span class="badge ${cancelado ? 'badge-cancelado' : 'badge-pendiente'}">
-              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE ⏳'}
+              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE 🙁'}
             </span>
           </div>
 
