@@ -2,1216 +2,2613 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Control de Fragancias - JESSY FRAGANCIA</title>
-  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>JESSY FRAGANCIA - Gestión de Clientes y Cobros</title>
 
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
   <style>
     :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --card-inner: #0f172a;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      
-      --accent-gold: #ffdd00;
-      --accent-emerald: #00ff88; 
-      --accent-rose: #ff007f; 
-      --accent-whatsapp: #25D366;
-      
-      --border-color: #334155;
-      --input-bg: #0f172a;
+      --bg: #07060e;
+      --bg-gradient: radial-gradient(circle at top, #1f0e2e 0%, #0b0918 55%, #06050c 100%);
+      --card-bg: linear-gradient(145deg, #161129 0%, #0d0a1a 100%);
+      --card-solid: #130e24;
+      --subcard-bg: rgba(9, 7, 18, 0.78);
+      --input-bg: #0b0816;
+      --header-bg: linear-gradient(135deg, #140924 0%, #2b0f3b 50%, #120820 100%);
+      --nav-bg: rgba(12, 9, 24, 0.96);
+
+      --neon-gold: #ffd700;
+      --neon-rose: #ff1e8a;
+      --neon-cyan: #00e5ff;
+      --neon-green: #00ff88;
+      --neon-red: #ff2a6d;
+
+      --text: #faf7ff;
+      --text-muted: #b4a7c9;
+      --border: #2e2147;
+      --border-glow: rgba(255, 30, 138, 0.45);
+      --shadow-card: 0 8px 24px rgba(5, 2, 14, 0.72);
+      --radius: 15px;
+    }
+
+    body.light-mode {
+      --bg: #faf6fb;
+      --bg-gradient: linear-gradient(180deg, #f6eef9 0%, #fdfbfd 100%);
+      --card-bg: linear-gradient(145deg, #ffffff 0%, #fcf7fe 100%);
+      --card-solid: #ffffff;
+      --subcard-bg: #f8f1fb;
+      --input-bg: #ffffff;
+      --header-bg: linear-gradient(135deg, #280d38 0%, #4a1563 50%, #240b33 100%);
+      --nav-bg: rgba(255, 255, 255, 0.97);
+
+      --neon-gold: #b77900;
+      --neon-rose: #c90063;
+      --neon-cyan: #0077b6;
+      --neon-green: #059669;
+      --neon-red: #dc2626;
+
+      --text: #1b1026;
+      --text-muted: #5c4b6e;
+      --border: #e3d3ed;
+      --border-glow: rgba(201, 0, 99, 0.32);
+      --shadow-card: 0 6px 18px rgba(45, 16, 66, 0.09);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      padding: 16px;
-      max-width: 500px;
-      margin: 0 auto;
-      padding-bottom: 40px;
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      padding-bottom: 96px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
-    .top-controls {
+    header {
+      background: var(--header-bg);
+      padding: 12px 14px;
+      border-bottom: 1.5px solid #ff1e8a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      align-items: center;
+      box-shadow: 0 4px 24px rgba(255, 30, 138, 0.28);
+      overflow: hidden;
     }
 
-    .btn-icon {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
+    .perfume-rain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .perfume-drop {
+      position: absolute;
+      top: -34px;
+      animation: fallPerfume linear infinite;
+      opacity: 0.92;
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.55));
+    }
+
+    @keyframes fallPerfume {
+      0% {
+        transform: translateY(-28px) rotate(-12deg) scale(0.95);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.95;
+      }
+      85% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(84px) rotate(14deg) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .brand-box {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      object-fit: cover;
+      border: 1.5px solid #ffd700;
+      box-shadow: 0 0 12px rgba(255, 30, 138, 0.65);
+      flex-shrink: 0;
+      background: #1b0d2b;
+    }
+
+    .brand-titles {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.08rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff3a1 0%, #ffd700 45%, #ff4da6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.35));
+    }
+
+    .brand-subtitle {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #f3d9ff;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      margin-top: 2px;
+      opacity: 0.9;
+    }
+
+    .header-btns {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      background: rgba(18, 9, 34, 0.82);
+      border: 1px solid rgba(255, 215, 0, 0.55);
+      color: #ffd700;
+      padding: 7px 9px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.78rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 4px;
+      box-shadow: 0 0 10px rgba(255, 30, 138, 0.25);
+      backdrop-filter: blur(6px);
     }
 
-    .btn-icon:active {
-      transform: scale(0.95);
+    .icon-btn.scan-highlight {
+      background: linear-gradient(135deg, #ffd700, #ff1e8a);
+      color: #14051f;
+      border-color: #fff099;
     }
 
-    .header {
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 10px 0 20px 0;
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.3);
     }
 
-    .header-logo {
-      width: 55px;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
-      border: 1px solid var(--accent-rose);
-    }
-
-    .header-text {
-      text-align: left;
-    }
-
-    .header-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-rose) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-
-    .header-sub {
-      font-size: 0.8rem;
+    nav button {
+      flex: 1;
+      padding: 10px 4px;
+      background: none;
+      border: none;
       color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 0.67rem;
+      font-weight: 800;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      border-top: 2.5px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    nav button span.nav-ico {
+      font-size: 1.15rem;
+    }
+
+    nav button.active {
+      color: var(--neon-rose);
+      text-shadow: 0 0 10px rgba(255, 30, 138, 0.55);
+      border-top: 2.5px solid var(--neon-rose);
+    }
+
+    .container {
+      padding: 14px;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .metrics-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .metric-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px 14px;
+      border: 1px solid var(--border);
+      padding: 10px 6px;
+      border-radius: var(--radius);
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: var(--shadow-card);
     }
 
-    .metric-value {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-top: 2px;
+    .metric-val {
+      font-size: 1.02rem;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .metric-label {
-      font-size: 0.72rem;
+    .metric-val.cyan { color: var(--neon-cyan); text-shadow: 0 0 8px rgba(0, 229, 255, 0.35); }
+    .metric-val.green { color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 136, 0.35); }
+    .metric-val.gold { color: var(--neon-gold); text-shadow: 0 0 8px rgba(255, 215, 0, 0.35); }
+    .metric-val.rose { color: var(--neon-rose); text-shadow: 0 0 8px rgba(255, 30, 138, 0.35); }
+
+    .metric-lbl {
+      font-size: 0.62rem;
       color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
     }
 
-    .val-cobrado { color: var(--accent-emerald); text-shadow: 0 0 5px rgba(0,255,136,0.3); }
-    .val-pendiente { color: var(--accent-gold); text-shadow: 0 0 5px rgba(255,221,0,0.3); }
+    .search-box {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .search-box input {
+      padding-left: 38px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--card-solid);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .filter-pill {
+      padding: 9px 6px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--card-solid);
+      color: var(--text-muted);
+      font-weight: 800;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill.active-gold {
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.25);
+    }
+
+    .filter-pill.active-green {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+    }
+
+    .filter-pill.active-rose {
+      border-color: var(--neon-rose);
+      color: var(--neon-rose);
+      box-shadow: 0 0 12px rgba(255, 30, 138, 0.25);
+    }
 
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
     }
 
     .card-title {
       font-size: 1rem;
-      font-weight: 600;
-      color: #f1f5f9;
+      color: var(--neon-gold);
       margin-bottom: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 12px; }
 
     label {
       display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 0.72rem;
+      font-weight: 800;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
 
-    .input-wrapper {
+    .input-with-btn {
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
-    input {
-      flex: 1;
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
       background: var(--input-bg);
-      border: 1px solid var(--border-color);
+      border: 1.5px solid var(--border);
       border-radius: 10px;
-      padding: 12px 14px;
-      color: var(--text-main);
-      font-size: 0.95rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input:focus {
-      border-color: var(--accent-gold);
+    input.upper-input {
+      text-transform: uppercase;
     }
 
-    .btn-mic {
-      background: #334155;
-      border: 1px solid #475569;
+    input:focus, select:focus {
+      border-color: var(--neon-rose);
+      box-shadow: 0 0 10px var(--border-glow);
+    }
+
+    .mic-btn {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
       border-radius: 10px;
-      width: 46px;
+      border: 1.5px solid var(--border);
+      background: linear-gradient(145deg, #271742, #150c26);
+      color: #ffd700;
+      font-size: 1.1rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .btn-mic:active {
-      transform: scale(0.95);
+    .mic-btn.listening {
+      border-color: var(--neon-rose);
+      color: #fff;
+      background: var(--neon-rose);
+      animation: pulse 1s infinite;
     }
 
-    .btn-mic.recording {
-      background: var(--accent-rose);
-      border-color: var(--accent-rose);
-      animation: pulse 1.2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0.6); }
-      70% { box-shadow: 0 0 0 10px rgba(255, 0, 127, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0); }
-    }
-
-    .btn-primary {
+    .btn {
       width: 100%;
-      background: linear-gradient(135deg, var(--accent-gold) 0%, #d97706 100%);
-      color: #0f172a;
+      padding: 13px;
       border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.95rem;
-      font-weight: 800;
+      border-radius: 11px;
+      font-weight: 900;
+      font-size: 0.86rem;
       cursor: pointer;
-      margin-top: 6px;
-      box-shadow: 0 4px 14px rgba(255, 221, 0, 0.25);
-      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s ease;
     }
 
-    .btn-primary:active {
-      transform: scale(0.98);
+    .btn:active { transform: scale(0.98); }
+
+    .btn-luxury {
+      background: linear-gradient(135deg, #ffd700 0%, #ff1e8a 100%);
+      color: #14051f;
+      box-shadow: 0 4px 16px rgba(255, 30, 138, 0.35);
     }
 
-    .search-box {
-      margin-bottom: 14px;
+    .btn-cyan {
+      background: linear-gradient(135deg, #00e5ff 0%, #0077ff 100%);
+      color: #031024;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.35);
     }
 
-    .search-box input {
-      width: 100%;
+    .btn-green {
+      background: linear-gradient(135deg, #00ff88 0%, #00b862 100%);
+      color: #031f11;
+      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
     }
 
-    .filter-tabs {
+    .btn-gold {
+      background: linear-gradient(135deg, #ffe033 0%, #f59e0b 100%);
+      color: #1f1300;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-red {
+      background: linear-gradient(135deg, #ff2a6d 0%, #c8104a 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 42, 109, 0.3);
+    }
+
+    .btn-telegram {
+      background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(34, 158, 217, 0.35);
+    }
+
+    .btn-outline-rose {
+      background: transparent;
+      border: 1.5px dashed var(--neon-rose);
+      color: var(--neon-rose);
+    }
+
+    .article-builder-row {
+      background: var(--subcard-bg);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .article-row-top {
       display: flex;
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
 
-    .tab-btn {
-      flex: 1;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 8px;
+    .article-row-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 36px;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-remove-row {
+      height: 40px;
       border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      border: 1px solid rgba(255, 42, 109, 0.5);
+      background: rgba(255, 42, 109, 0.14);
+      color: var(--neon-red);
+      font-weight: 900;
       cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
     }
 
-    .tab-btn.active {
-      background: #334155;
-      color: var(--accent-gold);
-      border-color: var(--accent-gold);
+    .total-preview-box {
+      background: var(--subcard-bg);
+      border: 1.5px solid var(--neon-gold);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 14px rgba(255, 215, 0, 0.18);
     }
 
-    .cliente-item {
+    .client-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
+      border: 1.5px solid var(--border);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
       margin-bottom: 14px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-card);
     }
 
-    .cliente-item::before {
-      content: '';
+    .client-card::before {
+      content: "";
       position: absolute;
-      top: 0;
       left: 0;
-      width: 6px;
-      height: 100%;
+      top: 10px;
+      bottom: 10px;
+      width: 4.5px;
+      border-radius: 0 6px 6px 0;
     }
 
-    .cliente-item.status-pendiente::before {
-      background-color: var(--accent-gold);
-      box-shadow: 0 0 8px var(--accent-gold);
+    .client-card.status-pending {
+      border-color: rgba(255, 215, 0, 0.55);
+    }
+    .client-card.status-pending::before {
+      background: var(--neon-gold);
+      box-shadow: 0 0 12px var(--neon-gold);
     }
 
-    .cliente-item.status-cancelado::before {
-      background-color: var(--accent-emerald);
-      box-shadow: 0 0 8px var(--accent-emerald);
+    .client-card.status-paid {
+      border-color: rgba(0, 255, 136, 0.55);
+    }
+    .client-card.status-paid::before {
+      background: var(--neon-green);
+      box-shadow: 0 0 12px var(--neon-green);
     }
 
-    .item-header {
+    .client-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-left: 6px;
     }
 
-    .client-name-container {
+    .client-name-wrap {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .client-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #f8fafc;
+      font-size: 1.12rem;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: var(--text);
     }
 
-    .btn-edit-name {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
+    .edit-pencil-btn {
+      background: rgba(255, 30, 138, 0.14);
+      border: 1px solid rgba(255, 30, 138, 0.45);
+      color: var(--neon-rose);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
       cursor: pointer;
-      font-size: 0.85rem;
     }
 
-    .badge {
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 5px 10px;
+    .status-pill {
+      padding: 5px 11px;
       border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 900;
       letter-spacing: 0.5px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      white-space: nowrap;
     }
 
-    .badge-pendiente {
-      background: rgba(255, 221, 0, 0.15);
-      color: var(--accent-gold);
-      border: 1px solid var(--accent-gold);
+    .status-pill.pending {
+      background: rgba(255, 215, 0, 0.15);
+      border: 1.5px solid var(--neon-gold);
+      color: var(--neon-gold);
     }
 
-    .badge-cancelado {
+    .status-pill.paid {
       background: rgba(0, 255, 136, 0.15);
-      color: var(--accent-emerald);
-      border: 1px solid var(--accent-emerald);
+      border: 1.5px solid var(--neon-green);
+      color: var(--neon-green);
     }
 
-    .badge-rango {
-      font-size: 0.65rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-left: 4px;
-      text-transform: uppercase;
-    }
-
-    .rango-bronce { background: #78350f; color: #fef3c7; }
-    .rango-plata { background: #475569; color: #f8fafc; }
-    .rango-oro { background: #b45309; color: #fef08a; }
-    .rango-vip { background: var(--accent-rose); color: #ffffff; box-shadow: 0 0 8px var(--accent-rose); }
-
-    .item-details {
-      background: var(--card-inner);
-      border-radius: 10px;
+    .client-inner-panel {
+      background: var(--subcard-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 12px;
-      margin: 10px 0;
-      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .articles-summary-list {
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .article-line-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 3px 0;
+    }
+
+    .money-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
-    .detail-row {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .detail-label {
-      font-size: 0.7rem;
+    .money-box-lbl {
+      font-size: 0.66rem;
       color: var(--text-muted);
+      font-weight: 800;
       text-transform: uppercase;
     }
 
-    .detail-val {
-      font-weight: 600;
-      margin-top: 1px;
+    .money-box-val {
+      font-size: 1.05rem;
+      font-weight: 900;
+      margin-top: 2px;
     }
 
-    .abonos-section {
-      grid-column: 1 / -1;
-      margin-top: 6px;
+    .payments-divider {
+      border-top: 1px dashed var(--border);
       padding-top: 10px;
-      border-top: 1px dashed var(--border-color);
+      margin-top: 6px;
     }
 
-    .abonos-header {
+    .payments-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
+      font-size: 0.74rem;
+      font-weight: 800;
     }
 
-    .abonos-title {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-    }
-
-    .abonos-total {
-      font-size: 0.8rem;
-      color: var(--accent-emerald);
-      font-weight: 700;
-    }
-
-    .abono-row {
+    .payment-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(0, 255, 136, 0.08);
-      border: 1px solid rgba(0, 255, 136, 0.15);
-      padding: 8px 10px;
+      background: var(--card-solid);
+      border: 1px solid var(--border);
       border-radius: 8px;
+      padding: 7px 10px;
       margin-bottom: 6px;
+      font-size: 0.78rem;
     }
 
-    .abono-monto {
-      color: var(--accent-emerald);
-      font-weight: 700;
-      font-size: 0.9rem;
+    .payment-meta {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      margin-top: 2px;
     }
 
-    .abono-fecha {
-      color: #cbd5e1;
-      font-size: 0.75rem;
+    .payment-actions {
       display: flex;
       align-items: center;
-      gap: 4px;
-    }
-
-    .actions-grid {
-      display: flex;
       gap: 6px;
-      margin-top: 10px;
     }
 
-    .btn-action {
-      flex: 1;
-      padding: 9px;
-      border-radius: 8px;
-      border: none;
-      font-size: 0.78rem;
-      font-weight: 800;
+    .mini-icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 3px 7px;
+      font-size: 0.75rem;
       cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
     }
 
-    .btn-abono-200 {
-      background: rgba(255, 221, 0, 0.15);
-      color: var(--accent-gold);
-      border: 1px solid var(--accent-gold);
+    .client-footer-btns {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 44px;
+      gap: 8px;
     }
 
-    .btn-whatsapp {
-      background: rgba(37, 211, 102, 0.15);
-      color: var(--accent-whatsapp);
-      border: 1px solid var(--accent-whatsapp);
+    .btn-abono {
+      background: rgba(255, 215, 0, 0.14);
+      border: 1.5px solid var(--neon-gold);
+      color: var(--neon-gold);
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      padding: 10px 8px;
+      cursor: pointer;
     }
 
-    .btn-delete {
-      flex: 0 0 38px;
-      background: rgba(255, 0, 127, 0.15);
-      color: var(--accent-rose);
-      border: 1px solid var(--accent-rose);
+    .btn-wa {
+      background: rgba(0, 255, 136, 0.14);
+      border: 1.5px solid var(--neon-green);
+      color: var(--neon-green);
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      padding: 10px 8px;
+      cursor: pointer;
+    }
+
+    .btn-trash {
+      background: rgba(255, 42, 109, 0.14);
+      border: 1.5px solid rgba(255, 42, 109, 0.55);
+      color: var(--neon-red);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .inv-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .inv-card.stock-ok { border-color: rgba(0, 255, 136, 0.5); }
+    .inv-card.stock-low { border-color: var(--neon-gold); box-shadow: 0 0 12px rgba(255, 215, 0, 0.2); }
+    .inv-card.stock-out { border-color: var(--neon-red); box-shadow: 0 0 14px rgba(255, 42, 109, 0.28); }
+
+    .rank-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff1e8a, #7928ca);
+      color: #fff;
+      font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.9rem;
+      flex-shrink: 0;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 30px 10px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
+    .rank-badge.top-1 { background: linear-gradient(135deg, #ffe033, #d97706); color: #1a1000; }
+    .rank-badge.top-2 { background: linear-gradient(135deg, #e2e8f0, #64748b); color: #0f172a; }
+    .rank-badge.top-3 { background: linear-gradient(135deg, #f59e0b, #92400e); color: #fff; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
     }
 
-    .ranking-section {
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 2, 14, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 250;
       display: none;
-      animation: fadeIn 0.3s ease-in;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      overflow-y: auto;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .modal.active { display: flex; }
 
-    .rank-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
+    .modal-box {
+      background: var(--card-solid);
+      border: 1.5px solid var(--neon-rose);
       border-radius: 16px;
       padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .rank-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      margin-bottom: 14px;
-      text-align: center;
-      border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 10px;
-    }
-
-    .rank-item {
-      margin-bottom: 12px;
-    }
-
-    .rank-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #f1f5f9;
-    }
-    
-    .rank-info span:last-child {
-      color: var(--accent-emerald);
-    }
-
-    .progress-track {
-      background: var(--card-inner);
-      border-radius: 10px;
-      height: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.5s ease-in-out;
-    }
-
-    .fill-fragancia {
-      background: linear-gradient(90deg, var(--accent-gold) 0%, #d97706 100%);
-    }
-
-    .fill-cliente {
-      background: linear-gradient(90deg, var(--accent-rose) 0%, #9d004d 100%);
-    }
-
-    .vip-alert {
-      font-size: 0.7rem;
-      color: var(--accent-gold);
-      margin-top: 4px;
-      text-align: right;
-      font-weight: 700;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 500px;
-      max-height: 85vh;
-      border-radius: 18px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-
-    .modal-header {
-      padding: 16px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent-rose);
-    }
-
-    .btn-close {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      padding: 16px;
+      max-width: 480px;
+      max-height: 90vh;
       overflow-y: auto;
-      flex: 1;
+      box-shadow: 0 0 30px rgba(255, 30, 138, 0.35);
     }
 
-    .btn-restore {
-      background: rgba(0, 255, 136, 0.15);
-      color: var(--accent-emerald);
-      border: 1px solid var(--accent-emerald);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      cursor: pointer;
+    #reader {
+      width: 100%;
+      max-width: 360px;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid var(--neon-gold);
+      margin: 0 auto;
+    }
+
+    .creator-signature {
+      text-align: center;
+      padding: 16px 10px 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .creator-signature span {
+      background: linear-gradient(135deg, var(--neon-gold), var(--neon-rose));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0; }
+      header, nav, .header-btns, .filter-row, .search-box, .client-footer-btns, .btn, .edit-pencil-btn, .mini-icon-btn, .perfume-rain { display: none !important; }
+      .client-card, .inv-card { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; box-shadow: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <div class="top-controls">
-    <button class="btn-icon" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
-    <button class="btn-icon" onclick="abrirPapelera()" style="color: var(--accent-rose); border-color: var(--accent-rose);">🗑️ Papelera</button>
-  </div>
+  <header>
+    <div class="perfume-rain" id="perfume-rain" aria-hidden="true"></div>
 
-  <div class="header">
-    <img src="logo.png" alt="Logo JESSY FRAGANCIA" class="header-logo">
-    <div class="header-text">
-      <div class="header-title">JESSY FRAGANCIA</div>
-      <div class="header-sub">Gestión de Clientes y Cobros</div>
-    </div>
-  </div>
-
-  <div class="metrics-grid" id="seccionMetricas">
-    <div class="metric-card">
-      <div class="metric-label">Total Recaudado</div>
-      <div class="metric-value val-cobrado" id="metricCobrado">C$ 0</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">Pendiente Cobro</div>
-      <div class="metric-value val-pendiente" id="metricPendiente">C$ 0</div>
-    </div>
-  </div>
-
-  <div class="card" id="seccionRegistro">
-    <div class="card-title">➕ Nueva Venta</div>
-
-    <div class="form-group">
-      <label>Nombre del Cliente</label>
-      <div class="input-wrapper">
-        <input type="text" id="clienteInput" placeholder="Ej. Juan Pérez">
-        <button class="btn-mic" id="micCliente" onclick="dictar('clienteInput', 'micCliente')">🎙️</button>
+    <div class="brand-box">
+      <img src="logo.png" alt="JESSY FRAGANCIA" class="brand-logo" onerror="this.style.display='none'">
+      <div class="brand-titles">
+        <h1>JESSY FRAGANCIA</h1>
+        <span class="brand-subtitle">Alta Perfumería &amp; Decants</span>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Fragancia / Perfume</label>
-      <div class="input-wrapper">
-        <input type="text" id="fraganciaInput" placeholder="Ej. One Million">
-        <button class="btn-mic" id="micFragancia" onclick="dictar('fraganciaInput', 'micFragancia')">🎙️</button>
+    <div class="header-btns">
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Cambiar Tema Claro / Oscuro">
+        ☀️
+      </button>
+      <button class="icon-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
+        ⛶
+      </button>
+      <button class="icon-btn scan-highlight" onclick="openScanner('SEARCH')" title="Escanear Código">
+        📷
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div id="tab-clientes" class="tab-content active">
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-val gold" id="m-pending-money">C$ 0</div>
+          <div class="metric-lbl">Por Cobrar</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val green" id="m-paid-money">C$ 0</div>
+          <div class="metric-lbl">Cobrado</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val cyan" id="m-inv-units">0</div>
+          <div class="metric-lbl">En Bodega</div>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="client-search" class="upper-input" placeholder="BUSCAR CLIENTE O FRAGANCIA..." oninput="renderClients()">
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-pill active-gold" id="f-pending" onclick="setClientFilter('PENDING')">Pendientes (<span id="c-pending">0</span>)</button>
+        <button class="filter-pill" id="f-paid" onclick="setClientFilter('PAID')">Cancelados (<span id="c-paid">0</span>)</button>
+        <button class="filter-pill" id="f-all" onclick="setClientFilter('ALL')">Todos (<span id="c-all">0</span>)</button>
+      </div>
+
+      <div id="clients-list"></div>
+    </div>
+
+    <div id="tab-venta" class="tab-content">
+      <div class="card">
+        <div class="card-title">✨ Nueva Venta de Fragancia</div>
+        <form id="new-sale-form">
+
+          <div class="form-group">
+            <label>Nombre del Cliente</label>
+            <div class="input-with-btn">
+              <input type="text" id="sale-client" class="upper-input" list="clients-datalist" placeholder="EJ. JESSY FLOREZ" required>
+              <button type="button" class="mic-btn" onclick="startVoiceDictation('sale-client', this)" title="Dictar por voz">🎙️</button>
+            </div>
+            <datalist id="clients-datalist"></datalist>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label style="margin:0;">Fragancias / Artículos</label>
+              <button type="button" class="icon-btn" style="padding:4px 10px; font-size:0.72rem;" onclick="openScanner('SALE_ADD')">📷 Escanear</button>
+            </div>
+
+            <div id="sale-articles-container"></div>
+
+            <button type="button" class="btn btn-outline-rose" style="padding:10px; font-size:0.78rem;" onclick="addSaleArticleRow('sale-articles-container')">
+              + Agregar Otra Fragancia
+            </button>
+          </div>
+
+          <div class="total-preview-box">
+            <span style="font-size:0.8rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Monto Total (C$)</span>
+            <span style="font-size:1.3rem; font-weight:900; color:var(--neon-gold);" id="sale-total-display">C$ 0</span>
+          </div>
+
+          <div class="form-group" style="background:var(--subcard-bg); padding:10px; border-radius:10px; border:1px solid var(--border);">
+            <label>Prima / Abono Inicial (Opcional - C$)</label>
+            <input type="text" id="sale-prima" inputmode="decimal" placeholder="Dejar vacío si no dejó prima">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+              <div>
+                <label>Fecha</label>
+                <input type="text" id="sale-date" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" required>
+              </div>
+              <div>
+                <label>Hora</label>
+                <input type="text" id="sale-time" placeholder="HH:MM AM/PM" required>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-luxury">Guardar Venta</button>
+        </form>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Monto Total (C$)</label>
-      <input type="number" id="totalInput" value="400">
-    </div>
+    <div id="tab-inventario" class="tab-content">
+      <div class="card">
+        <div class="card-title" id="inv-form-title">🧪 Registrar Fragancia en Bodega</div>
+        <form id="inv-form">
+          <input type="hidden" id="inv-id">
 
-    <button class="btn-primary" onclick="guardarVenta()">Guardar Venta</button>
-  </div>
+          <div class="form-group">
+            <label>Código de Barras / ID (Opcional)</label>
+            <div class="input-with-btn">
+              <input type="text" id="inv-code" class="upper-input" placeholder="ESCANEAR O ESCRIBIR CÓDIGO">
+              <button type="button" class="mic-btn" style="background:var(--neon-gold); color:#14051f; font-weight:900;" onclick="openScanner('INV_INPUT')">📷</button>
+            </div>
+          </div>
 
-  <div class="search-box" id="seccionBuscador">
-    <input type="text" id="searchInput" placeholder="🔍 Buscar cliente o perfume..." oninput="render()">
-  </div>
+          <div class="form-group">
+            <label>Nombre de la Fragancia / Presentación</label>
+            <div class="input-with-btn">
+              <input type="text" id="inv-name" class="upper-input" placeholder="EJ. BLEU DE CHANEL 100ML" required>
+              <button type="button" class="mic-btn" onclick="startVoiceDictation('inv-name', this)">🎙️</button>
+            </div>
+          </div>
 
-  <div class="filter-tabs">
-    <button class="tab-btn active" id="tab-pendientes" onclick="setFiltro('pendientes')">Pendientes</button>
-    <button class="tab-btn" id="tab-cancelados" onclick="setFiltro('cancelados')">Cancelados</button>
-    <button class="tab-btn" id="tab-rankings" onclick="setFiltro('rankings')" style="color: var(--accent-rose); border-color: var(--accent-rose);">🏆 Rankings</button>
-  </div>
+          <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label>Stock Disponible</label>
+              <input type="text" id="inv-qty" inputmode="numeric" placeholder="0" required>
+            </div>
+            <div>
+              <label>Stock Mínimo (Alerta)</label>
+              <input type="text" id="inv-min" inputmode="numeric" placeholder="3" value="3">
+            </div>
+          </div>
 
-  <div id="listaClientes"></div>
+          <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label>Costo Compra (C$)</label>
+              <input type="text" id="inv-cost" inputmode="decimal" placeholder="0">
+            </div>
+            <div>
+              <label>Precio Venta (C$)</label>
+              <input type="text" id="inv-price" inputmode="decimal" placeholder="0" required>
+            </div>
+          </div>
 
-  <div id="seccionRankings" class="ranking-section">
-    <div class="rank-card">
-      <div class="rank-title">🧪 Top Perfumes Vendidos (Permanente)</div>
-      <div id="rankingFraganciasContenedor"></div>
-    </div>
-
-    <div class="rank-card">
-      <div class="rank-title">👑 Clientes VIP & Rangos</div>
-      <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Premios cíclicos cada 5 compras</div>
-      <div id="rankingClientesContenedor"></div>
-    </div>
-  </div>
-
-  <div id="modalPapelera" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">🗑️ Archivos Borrados</div>
-        <button class="btn-close" onclick="cerrarPapelera()">✖</button>
+          <button type="submit" class="btn btn-luxury" id="inv-save-btn">Guardar en Inventario</button>
+          <button type="button" class="btn btn-red" id="inv-cancel-btn" style="display:none; margin-top:8px;" onclick="resetInvForm()">Cancelar Edición</button>
+        </form>
       </div>
-      <div class="modal-body" id="listaPapeleraContenedor"></div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="inv-search" class="upper-input" placeholder="BUSCAR FRAGANCIA EN BODEGA..." oninput="renderInventory()">
+      </div>
+
+      <div id="inventory-list"></div>
+    </div>
+
+    <div id="tab-top" class="tab-content">
+      <div class="card" style="padding:12px 14px;">
+        <div class="card-title" style="margin-bottom:4px;">🏆 Fragancias Más Vendidas</div>
+        <p style="font-size:0.76rem; color:var(--text-muted);">
+          Las fragancias con el mismo nombre se apilan automáticamente para mostrarte cuáles rotan más y conviene volver a pedir.
+        </p>
+      </div>
+
+      <div id="top-sold-list"></div>
+    </div>
+
+    <div id="tab-exportar" class="tab-content">
+
+      <div class="card" style="border-color: rgba(34, 158, 217, 0.55);">
+        <div class="card-title" style="color:#38bdf8;">✈️ Nube Privada en Telegram (Sin Límites)</div>
+        <p style="font-size:0.76rem; color:var(--text-muted); margin-bottom:12px;">
+          Tus llaves se guardan <strong>únicamente en este teléfono</strong> (nunca se suben a GitHub), por lo que solo vos tenés acceso a tus respaldos de Jessy Fragancia.
+        </p>
+
+        <div class="form-group">
+          <label>Token de tu Bot (@BotFather)</label>
+          <div class="input-with-btn">
+            <input type="password" id="tg-token" placeholder="Ej: 7845123490:AAH..." autocomplete="off">
+            <button type="button" class="mic-btn" onclick="toggleTokenVisibility()" title="Mostrar / Ocultar Token">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tu Chat ID Privado (@userinfobot)</label>
+          <input type="text" id="tg-chat-id" inputmode="numeric" placeholder="Ej: 123456789" autocomplete="off">
+        </div>
+
+        <button type="button" class="btn btn-outline-rose" style="margin-bottom:12px; padding:10px; font-size:0.78rem;" onclick="saveTelegramConfig()">
+          🔐 Guardar Llaves en este Teléfono
+        </button>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:8px;">
+          <button type="button" class="btn btn-telegram" id="btn-tg-backup" onclick="backupToTelegram()">
+            ✈️ Guardar Respaldo en Telegram
+          </button>
+          <button type="button" class="btn btn-green" id="btn-tg-restore" onclick="restoreFromTelegram()">
+            🔄 Restaurar Último desde Telegram
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📤 Reportes y Copia Local</div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:14px;">
+          Exportá el resumen general de cuentas o guardá un archivo de respaldo directo en la memoria de tu celular.
+        </p>
+
+        <button class="btn btn-green" style="margin-bottom:10px;" onclick="shareGeneralWhatsApp()">
+          📲 Compartir Resumen General por WhatsApp
+        </button>
+
+        <button class="btn btn-cyan" style="margin-bottom:10px;" onclick="exportExcelCSV()">
+          📊 Descargar Excel (.csv)
+        </button>
+
+        <button class="btn btn-gold" style="margin-bottom:16px;" onclick="window.print()">
+          🖨️ Imprimir / Guardar PDF
+        </button>
+
+        <div style="border-top:1px dashed var(--border); padding-top:14px;">
+          <label style="margin-bottom:8px;">Respaldo Manual en Teléfono (.JSON)</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <button type="button" class="btn btn-luxury" style="font-size:0.75rem;" onclick="downloadBackupJSON()">💾 Guardar Archivo</button>
+            <button type="button" class="btn btn-outline-rose" style="font-size:0.75rem;" onclick="document.getElementById('restore-file').click()">📂 Cargar Archivo</button>
+          </div>
+          <input type="file" id="restore-file" accept=".json" style="display:none;" onchange="restoreBackupJSON(event)">
+        </div>
+      </div>
+    </div>
+
+    <div class="creator-signature">
+      ⚡ Sistema desarrollado por <span>Yoardy Cruz</span> • JESSY FRAGANCIA
+    </div>
+
+  </div>
+
+  <nav>
+    <button class="active" data-tab="clientes" onclick="switchTab('clientes')">
+      <span class="nav-ico">👥</span>
+      <span>Clientes</span>
+    </button>
+    <button data-tab="venta" onclick="switchTab('venta')">
+      <span class="nav-ico">➕</span>
+      <span>Venta</span>
+    </button>
+    <button data-tab="inventario" onclick="switchTab('inventario')">
+      <span class="nav-ico">🧪</span>
+      <span>Inventario</span>
+    </button>
+    <button data-tab="top" onclick="switchTab('top')">
+      <span class="nav-ico">🏆</span>
+      <span>Más Vendidos</span>
+    </button>
+    <button data-tab="exportar" onclick="switchTab('exportar')">
+      <span class="nav-ico">📤</span>
+      <span>Exportar</span>
+    </button>
+  </nav>
+
+  <div id="payment-modal" class="modal">
+    <div class="modal-box">
+      <div class="card-title" id="pay-modal-title">💵 Ingresar Abono</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;" id="pay-modal-client-info"></div>
+
+      <form id="payment-form">
+        <input type="hidden" id="pay-sale-id">
+        <input type="hidden" id="pay-item-id">
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label>Monto del Abono (C$)</label>
+            <button type="button" id="btn-fill-rest" style="background:none; border:none; color:var(--neon-green); font-size:0.72rem; font-weight:800; cursor:pointer;" onclick="fillRemainingAmount()">Liquidar Saldo Completo</button>
+          </div>
+          <input type="text" id="pay-amount" inputmode="decimal" placeholder="0" required>
+        </div>
+
+        <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label>Fecha del Abono</label>
+            <input type="text" id="pay-date" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" required>
+          </div>
+          <div>
+            <label>Hora del Abono</label>
+            <input type="text" id="pay-time" placeholder="HH:MM AM/PM" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+          <button type="button" class="btn btn-red" onclick="closeModal('payment-modal')">Cancelar</button>
+          <button type="submit" class="btn btn-green">Guardar Abono</button>
+        </div>
+      </form>
     </div>
   </div>
+
+  <div id="edit-sale-modal" class="modal">
+    <div class="modal-box">
+      <div class="card-title">✏️ Editar Cuenta de Cliente</div>
+      <form id="edit-sale-form">
+        <input type="hidden" id="edit-sale-id">
+
+        <div class="form-group">
+          <label>Nombre del Cliente</label>
+          <div class="input-with-btn">
+            <input type="text" id="edit-sale-client" class="upper-input" required>
+            <button type="button" class="mic-btn" onclick="startVoiceDictation('edit-sale-client', this)">🎙️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Fragancias / Artículos (Podés editar o agregar más sin límite)</label>
+          <div id="edit-articles-container"></div>
+          <button type="button" class="btn btn-outline-rose" style="padding:9px; font-size:0.76rem;" onclick="addSaleArticleRow('edit-articles-container')">
+            + Agregar Más Fragancias
+          </button>
+        </div>
+
+        <div class="total-preview-box">
+          <span style="font-size:0.78rem; font-weight:800; color:var(--text-muted);">NUEVO VALOR TOTAL</span>
+          <span style="font-size:1.2rem; font-weight:900; color:var(--neon-gold);" id="edit-total-display">C$ 0</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <button type="button" class="btn btn-red" onclick="closeModal('edit-sale-modal')">Cancelar</button>
+          <button type="submit" class="btn btn-luxury">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="scanner-modal" class="modal">
+    <div class="modal-box" style="text-align:center;">
+      <div class="card-title" style="justify-content:center;">📷 Escaneando Código</div>
+      <div id="reader"></div>
+      <button type="button" class="btn btn-red" style="margin-top:14px;" onclick="closeScanner()">Cerrar Cámara</button>
+    </div>
+  </div>
+
+  <datalist id="inventory-datalist"></datalist>
 
   <script>
-    let ventas = JSON.parse(localStorage.getItem('ventas_fragancias_v2')) || [];
-    let papelera = JSON.parse(localStorage.getItem('papelera_fragancias_v2')) || [];
-    let rankingPermanenteFragancias = JSON.parse(localStorage.getItem('ranking_permanente_perfumes_v2')) || {};
-    
-    let filtroActual = 'pendientes';
+    // =========================================================================
+    // 1. MIGRACIÓN SEGURA DESDE JESSY FRAGANCIA V2 + ESTADO GLOBAL
+    // =========================================================================
+    let sales = JSON.parse(localStorage.getItem('jf_sales_v3') || 'null');
+    let inventory = JSON.parse(localStorage.getItem('jf_inventory_v3') || '[]');
+    let historicalFragranceCounts = JSON.parse(localStorage.getItem('ranking_permanente_perfumes_v2') || '{}');
 
-    function toggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          alert(`Error al iniciar pantalla completa: ${err.message}`);
+    function migrateLegacyJessyData() {
+      if (sales !== null) return;
+
+      const legacyVentas = JSON.parse(localStorage.getItem('ventas_fragancias_v2') || '[]');
+      if (legacyVentas.length > 0) {
+        sales = legacyVentas.map((v, idx) => {
+          const totalMonto = parseFloat(v.total) || 0;
+          const abonosList = [];
+
+          if (Array.isArray(v.historialAbonos) && v.historialAbonos.length > 0) {
+            v.historialAbonos.forEach((h, hIdx) => {
+              let fDate = v.fecha || getNowDateStr();
+              let fTime = '12:00 PM';
+              if (h.fecha && h.fecha.includes('-')) {
+                const parts = h.fecha.split('-');
+                fDate = parts[0].trim();
+                fTime = parts[1] ? parts[1].trim() : '12:00 PM';
+              }
+              abonosList.push({
+                id: Date.now() + idx * 100 + hIdx,
+                label: `ABONO #${hIdx + 1}`,
+                amount: parseFloat(h.monto) || 0,
+                date: fDate,
+                time: fTime
+              });
+            });
+          } else if ((parseFloat(v.abonos) || 0) > 0) {
+            abonosList.push({
+              id: Date.now() + idx * 100,
+              label: 'ABONO #1',
+              amount: parseFloat(v.abonos) || 0,
+              date: v.fecha || getNowDateStr(),
+              time: '12:00 PM'
+            });
+          }
+
+          return {
+            id: v.id || (Date.now() + idx),
+            clientName: (v.cliente || 'CLIENTE').trim().toUpperCase(),
+            articles: [
+              {
+                name: (v.fragancia || 'FRAGANCIA').trim().toUpperCase(),
+                qty: 1,
+                price: totalMonto
+              }
+            ],
+            payments: abonosList,
+            createdAt: v.fecha || getNowDateStr()
+          };
         });
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
+        sales = [];
+      }
+
+      localStorage.setItem('jf_sales_v3', JSON.stringify(sales));
+    }
+
+    let currentClientFilter = 'PENDING';
+    let html5QrcodeScanner = null;
+    let scanMode = 'SEARCH';
+
+    function saveAllData() {
+      localStorage.setItem('jf_sales_v3', JSON.stringify(sales));
+      localStorage.setItem('jf_inventory_v3', JSON.stringify(inventory));
+      updateDatalists();
+      renderClients();
+      renderInventory();
+      renderTopSold();
+    }
+
+    // =========================================================================
+    // 2. LLUVIA SUPERIOR DE FRASCOS DE FRAGANCIAS DE DISTINTAS MARCAS
+    // =========================================================================
+    function initHeaderPerfumeRain() {
+      const container = document.getElementById('perfume-rain');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const bottleSVGs = [
+        // Frasco estilo Dior Sauvage (Cilindro degradado azul noche / cian)
+        `<svg width="16" height="24" viewBox="0 0 24 36" fill="none">
+          <rect x="9" y="1" width="6" height="5" rx="1" fill="#1e293b" stroke="#ffd700" stroke-width="1"/>
+          <rect x="10.5" y="6" width="3" height="3" fill="#ffd700"/>
+          <rect x="5" y="9" width="14" height="24" rx="4" fill="url(#diorGrad)" stroke="#7dd3fc" stroke-width="1"/>
+          <rect x="7" y="15" width="10" height="8" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <defs><linearGradient id="diorGrad" x1="0" y1="9" x2="0" y2="33" gradientUnits="userSpaceOnUse"><stop stop-color="#0284c7"/><stop offset="1" stop-color="#0f172a"/></linearGradient></defs>
+        </svg>`,
+        // Frasco estilo Chanel No. 5 (Cuadrado clásico dorado lujo)
+        `<svg width="17" height="24" viewBox="0 0 26 36" fill="none">
+          <rect x="9" y="1" width="8" height="5" rx="1" fill="#fffbeb" stroke="#ffd700" stroke-width="1.2"/>
+          <rect x="11" y="6" width="4" height="3" fill="#ffd700"/>
+          <rect x="4" y="9" width="18" height="23" rx="3" fill="rgba(255,215,0,0.35)" stroke="#ffd700" stroke-width="1.3"/>
+          <rect x="8" y="14" width="10" height="10" rx="1" fill="#ffffff" stroke="#1e1b4b" stroke-width="0.8"/>
+        </svg>`,
+        // Frasco estilo Carolina Herrera Good Girl (Stiletto / Fucsia Neón)
+        `<svg width="18" height="24" viewBox="0 0 28 36" fill="none">
+          <path d="M6 26C10 26 14 21 17 12L21 4L24 5L20 18C18 25 14 30 6 31H4V26H6Z" fill="#ff1e8a" stroke="#ffd700" stroke-width="1"/>
+          <rect x="20" y="18" width="2.2" height="13" fill="#ffd700"/>
+        </svg>`,
+        // Frasco estilo Versace Eros (Turquesa / Esmeralda con medallón dorado)
+        `<svg width="16" height="24" viewBox="0 0 24 36" fill="none">
+          <rect x="8" y="1" width="8" height="5" rx="1" fill="#ffd700"/>
+          <rect x="5" y="7" width="14" height="25" rx="2.5" fill="#00d2a8" stroke="#a7f3d0" stroke-width="1"/>
+          <circle cx="12" cy="19" r="4.5" fill="#ffd700" stroke="#064e3b" stroke-width="0.8"/>
+        </svg>`,
+        // Frasco estilo Jean Paul Gaultier / Invictus (Trofeo / Silueta Rosa-Dorado)
+        `<svg width="17" height="24" viewBox="0 0 26 36" fill="none">
+          <rect x="10" y="1" width="6" height="4" rx="1" fill="#e2e8f0"/>
+          <path d="M6 8H20L18 17C18 23 16 31 13 32C10 31 8 23 8 17L6 8Z" fill="url(#jpgGrad)" stroke="#fbcfe8" stroke-width="1"/>
+          <defs><linearGradient id="jpgGrad" x1="6" y1="8" x2="20" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#f472b6"/><stop offset="1" stop-color="#9d174d"/></linearGradient></defs>
+        </svg>`
+      ];
+
+      const totalBottles = 14;
+      for (let i = 0; i < totalBottles; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'perfume-drop';
+        drop.innerHTML = bottleSVGs[i % bottleSVGs.length];
+
+        const leftPct = (i * (100 / totalBottles)) + (Math.random() * 3.5);
+        const duration = 2.8 + (i % 5) * 0.5;
+        const delay = -(Math.random() * 4.5);
+
+        drop.style.left = `${Math.min(94, leftPct)}%`;
+        drop.style.animationDuration = `${duration}s`;
+        drop.style.animationDelay = `${delay}s`;
+        container.appendChild(drop);
       }
     }
 
-    function dictar(inputId, btnId) {
+    // =========================================================================
+    // 3. TEMA OSCURO / CLARO Y PANTALLA COMPLETA
+    // =========================================================================
+    function applySavedTheme() {
+      const theme = localStorage.getItem('jf_theme') || 'dark';
+      const btn = document.getElementById('theme-btn');
+      if (theme === 'light') {
+        document.body.classList.add('light-mode');
+        btn.innerText = '🌙';
+      } else {
+        document.body.classList.remove('light-mode');
+        btn.innerText = '☀️';
+      }
+    }
+
+    function toggleTheme() {
+      playCyberSound('action');
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('jf_theme', isLight ? 'light' : 'dark');
+      document.getElementById('theme-btn').innerText = isLight ? '🌙' : '☀️';
+    }
+
+    function toggleFullscreen() {
+      playCyberSound('action');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {
+          alert('Para abrir sin barra de navegador, tocá los 3 puntitos de Chrome y elegí "Agregar a la pantalla principal".');
+        });
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    // =========================================================================
+    // 4. AUDIO SINTÉTICO TÁCTIL
+    // =========================================================================
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let lastSoundTs = 0;
+
+    function playCyberSound(type = 'tap') {
+      const nowMs = Date.now();
+      if (type === 'tap' && nowMs - lastSoundTs < 110) return;
+      lastSoundTs = nowMs;
+
+      try {
+        if (!audioCtx) audioCtx = new AudioCtx();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'tap') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(920, now);
+          osc.frequency.exponentialRampToValueAtTime(180, now + 0.045);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+          osc.start(now);
+          osc.stop(now + 0.045);
+        } else if (type === 'action') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1050, now);
+          osc.frequency.setValueAtTime(1580, now + 0.045);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+          osc.start(now);
+          osc.stop(now + 0.11);
+        } else if (type === 'scanner') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.linearRampToValueAtTime(1320, now + 0.14);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } else if (type === 'delete') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(280, now);
+          osc.frequency.linearRampToValueAtTime(85, now + 0.14);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+          osc.start(now);
+          osc.stop(now + 0.14);
+        }
+      } catch (e) {}
+    }
+
+    document.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button, .icon-btn, .filter-pill, nav button')) {
+        playCyberSound('tap');
+      }
+    }, { passive: true });
+
+    // =========================================================================
+    // 5. MAYÚSCULAS, TECLADO NUMÉRICO Y FECHA/HORA
+    // =========================================================================
+    function enforceUppercase(el) {
+      if (!el) return;
+      el.addEventListener('input', () => {
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+        el.value = el.value.toUpperCase();
+        if (start !== null && end !== null) {
+          el.setSelectionRange(start, end);
+        }
+      });
+    }
+
+    function enforceNumeric(el, allowDecimal = false) {
+      if (!el) return;
+      el.addEventListener('input', () => {
+        if (allowDecimal) {
+          let val = el.value.replace(/[^0-9.]/g, '');
+          const parts = val.split('.');
+          if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+          el.value = val;
+        } else {
+          el.value = el.value.replace(/\D/g, '');
+        }
+      });
+    }
+
+    function applyDateMask(el) {
+      if (!el) return;
+      el.addEventListener('input', () => {
+        let v = el.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length > 4) {
+          el.value = `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
+        } else if (v.length > 2) {
+          el.value = `${v.slice(0, 2)}/${v.slice(2)}`;
+        } else {
+          el.value = v;
+        }
+      });
+    }
+
+    function getNowDateStr() {
+      const d = new Date();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    function getNowTimeStr() {
+      const d = new Date();
+      let hours = d.getHours();
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      return `${String(hours).padStart(2, '0')}:${mins} ${ampm}`;
+    }
+
+    function formatMoney(num) {
+      const val = Number(num) || 0;
+      return val % 1 === 0 ? val.toLocaleString('es-NI') : val.toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function startVoiceDictation(inputId, btnEl) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Tu navegador no soporta micrófono directo. Probá usar el teclado por voz.");
+        alert('Tu navegador no soporta dictado por voz en este momento.');
         return;
       }
-
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-NI';
-      const btn = document.getElementById(btnId);
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-      recognition.onstart = () => { btn.classList.add('recording'); };
-      recognition.onend = () => { btn.classList.remove('recording'); };
-      recognition.onresult = (event) => {
-        document.getElementById(inputId).value = event.results[0][0].transcript;
-      };
-      recognition.onerror = () => { btn.classList.remove('recording'); };
+      btnEl.classList.add('listening');
       recognition.start();
-    }
 
-    function guardarVenta() {
-      const cliente = document.getElementById('clienteInput').value.trim();
-      const fragancia = document.getElementById('fraganciaInput').value.trim();
-      const total = parseFloat(document.getElementById('totalInput').value) || 400;
-
-      if (!cliente || !fragancia) {
-        alert("Por favor ingresá el nombre del cliente y la fragancia.");
-        return;
-      }
-
-      const nuevaVenta = {
-        id: Date.now(),
-        cliente,
-        fragancia,
-        total,
-        abonos: 0,
-        historialAbonos: [],
-        fecha: new Date().toLocaleDateString('es-NI')
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toUpperCase().trim();
+        const target = document.getElementById(inputId);
+        if (target) {
+          target.value = transcript;
+          target.dispatchEvent(new Event('input'));
+        }
       };
 
-      ventas.unshift(nuevaVenta);
-
-      let fKey = fragancia.trim().toUpperCase();
-      rankingPermanenteFragancias[fKey] = (rankingPermanenteFragancias[fKey] || 0) + 1;
-
-      guardarEnStorage();
-      verificarPremioCliente(cliente);
-      render();
-
-      document.getElementById('clienteInput').value = '';
-      document.getElementById('fraganciaInput').value = '';
-      document.getElementById('totalInput').value = '400';
+      recognition.onerror = () => btnEl.classList.remove('listening');
+      recognition.onend = () => btnEl.classList.remove('listening');
     }
 
-    function verificarPremioCliente(nombreCliente) {
-      const key = nombreCliente.trim().toLowerCase();
-      const totalCompras = ventas.filter(v => v.cliente.trim().toLowerCase() === key).length;
-      if (totalCompras > 0 && totalCompras % 5 === 0) {
-        setTimeout(() => {
-          alert(`🎉 ¡FELICIDADES! ${nombreCliente} acaba de alcanzar ${totalCompras} compras.\n\n🎁 ¡Ha ganado su premio por fidelidad de 5 perfumes y asciende de Rango!`);
-        }, 300);
+    // =========================================================================
+    // 6. NAVEGACIÓN ENTRE PESTAÑAS
+    // =========================================================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.add('active');
+
+      if (tabId === 'venta') {
+        document.getElementById('sale-date').value = getNowDateStr();
+        document.getElementById('sale-time').value = getNowTimeStr();
       }
     }
 
-    function editarNombreCliente(nombreActual) {
-      const nuevoNombre = prompt("Modificar nombre del cliente:", nombreActual);
-      if (nuevoNombre !== null && nuevoNombre.trim() !== "" && nuevoNombre.trim() !== nombreActual) {
-        const nombreLimpio = nuevoNombre.trim();
-        let actualizados = 0;
-
-        ventas.forEach(v => {
-          if (v.cliente.trim().toLowerCase() === nombreActual.trim().toLowerCase()) {
-            v.cliente = nombreLimpio;
-            actualizados++;
-          }
-        });
-
-        guardarEnStorage();
-        render();
-        alert(`Se actualizó el nombre a "${nombreLimpio}" en ${actualizados} registros.`);
-      }
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
     }
 
-    function editarNombreFragancia(nombreActual) {
-      const nuevoNombre = prompt("Modificar nombre de la fragancia (esto unificará todos los registros):", nombreActual);
-      if (nuevoNombre !== null && nuevoNombre.trim() !== "" && nuevoNombre.trim().toUpperCase() !== nombreActual.toUpperCase()) {
-        const nombreLimpio = nuevoNombre.trim();
-        const upperNuevo = nombreLimpio.toUpperCase();
-        const upperViejo = nombreActual.toUpperCase();
+    function updateDatalists() {
+      const invList = document.getElementById('inventory-datalist');
+      invList.innerHTML = inventory.map(item =>
+        `<option value="${item.name}">Disp: ${item.qty} | C$ ${formatMoney(item.price)}</option>`
+      ).join('');
 
-        let actualizados = 0;
-
-        // Actualizar en todas las ventas
-        ventas.forEach(v => {
-          if (v.fragancia.trim().toUpperCase() === upperViejo) {
-            v.fragancia = nombreLimpio;
-            actualizados++;
-          }
-        });
-
-        // Actualizar en papelera
-        papelera.forEach(v => {
-          if (v.fragancia.trim().toUpperCase() === upperViejo) {
-            v.fragancia = nombreLimpio;
-          }
-        });
-
-        // Mover el contador al nuevo nombre unificando cantidades
-        let cantidadVieja = rankingPermanenteFragancias[upperViejo] || 0;
-        delete rankingPermanenteFragancias[upperViejo];
-        rankingPermanenteFragancias[upperNuevo] = (rankingPermanenteFragancias[upperNuevo] || 0) + cantidadVieja;
-
-        guardarEnStorage();
-        renderRankings(); 
-        alert(`Se actualizó a "${nombreLimpio}" en ${actualizados} registros. El ranking ha sido unificado.`);
-      }
+      const uniqueClients = [...new Set(sales.map(s => s.clientName))];
+      document.getElementById('clients-datalist').innerHTML = uniqueClients.map(c =>
+        `<option value="${c}">`
+      ).join('');
     }
 
-    function abonar(id, monto) {
-      const venta = ventas.find(v => v.id === id);
-      if (venta) {
-        const saldoRestante = venta.total - venta.abonos;
-        if (saldoRestante <= 0) return;
+    // =========================================================================
+    // 7. FILAS DINÁMICAS DE FRAGANCIAS / ARTÍCULOS SIN LÍMITE
+    // =========================================================================
+    function addSaleArticleRow(containerId, prefill = null) {
+      const container = document.getElementById(containerId);
+      const rowId = 'row_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      const div = document.createElement('div');
+      div.className = 'article-builder-row';
+      div.id = rowId;
 
-        const montoEfectivo = Math.min(saldoRestante, monto);
-        venta.abonos += montoEfectivo;
+      const nameVal = prefill ? prefill.name : '';
+      const qtyVal = prefill ? prefill.qty : '1';
+      const priceVal = prefill && prefill.price !== '' ? prefill.price : '';
 
-        if (!venta.historialAbonos) {
-          venta.historialAbonos = [];
-        }
-
-        const ahora = new Date();
-        const fechaFormateada = ahora.toLocaleDateString('es-NI', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const horaFormateada = ahora.toLocaleTimeString('es-NI', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-        venta.historialAbonos.push({
-          monto: montoEfectivo,
-          fecha: `${fechaFormateada} - ${horaFormateada}`
-        });
-
-        guardarEnStorage();
-        render();
-      }
-    }
-
-    function abonarPersonalizado(id) {
-      const montoInput = prompt("¿Cuánto es el abono (en C$)?");
-      if (montoInput !== null && montoInput.trim() !== "") {
-        const monto = parseFloat(montoInput);
-        if (!isNaN(monto) && monto > 0) {
-          abonar(id, monto);
-        } else {
-          alert("Por favor, ingresá una cantidad válida mayor a 0.");
-        }
-      }
-    }
-
-    function enviarWhatsApp(id) {
-      const venta = ventas.find(v => v.id === id);
-      if(!venta) return;
-
-      const saldo = venta.total - venta.abonos;
-      const estadoTxt = saldo <= 0 ? "¡CANCELADO TOTALMENTE! ✅" : `Pendiente: C$ ${saldo}`;
-
-      const nombreCliente = venta.cliente.trim().toLowerCase();
-      const comprasCliente = ventas.filter(v => v.cliente.trim().toLowerCase() === nombreCliente).length;
-
-      let msj = `Hola *${venta.cliente}*, aquí tienes el detalle de tu registro en *JESSY FRAGANCIA* ✨\n\n`;
-      msj += `🧪 *Fragancia:* ${venta.fragancia}\n`;
-      msj += `💵 *Monto Total:* C$ ${venta.total}\n`;
-      msj += `💸 *Total Abonado:* C$ ${venta.abonos}\n`;
-      msj += `⚠️ *Estado Actual:* ${estadoTxt}\n\n`;
-
-      if (comprasCliente % 5 === 0 && comprasCliente > 0) {
-        msj += `🎁 *¡FELICIDADES!* Has alcanzado *${comprasCliente} compras* acumuladas. ¡Tienes un premio esperándote por tu fidelidad!\n\n`;
-      } else {
-        const faltantes = 5 - (comprasCliente % 5);
-        msj += `⭐ Llevarás *${comprasCliente} perfume(s)* acumulados. Te faltan solo *${faltantes}* para tu próximo regalo sorpresa.\n\n`;
-      }
-
-      msj += `¡Gracias por preferir JESSY FRAGANCIA!`;
-
-      window.open(`https://wa.me/?text=${encodeURIComponent(msj)}`, '_blank');
-    }
-
-    function eliminar(id) {
-      if (confirm("¿Seguro que querés enviar este registro a la papelera?")) {
-        const index = ventas.findIndex(v => v.id === id);
-        if (index !== -1) {
-          const itemEliminado = ventas.splice(index, 1)[0];
-          papelera.unshift(itemEliminado);
-          guardarEnStorage();
-          render();
-        }
-      }
-    }
-
-    function abrirPapelera() {
-      document.getElementById('modalPapelera').style.display = 'flex';
-      renderPapelera();
-    }
-
-    function cerrarPapelera() {
-      document.getElementById('modalPapelera').style.display = 'none';
-    }
-
-    function restaurar(id) {
-      const index = papelera.findIndex(v => v.id === id);
-      if (index !== -1) {
-        const itemRecuperado = papelera.splice(index, 1)[0];
-        ventas.unshift(itemRecuperado);
-        guardarEnStorage();
-        render();
-        renderPapelera();
-      }
-    }
-
-    function vaciarPapelera() {
-      if(confirm("¿Seguro que quieres vaciar la papelera? Esta acción es definitiva.")) {
-        papelera = [];
-        guardarEnStorage();
-        renderPapelera();
-      }
-    }
-
-    function renderPapelera() {
-      const contenedor = document.getElementById('listaPapeleraContenedor');
-      if (papelera.length === 0) {
-        contenedor.innerHTML = '<div class="empty-state">La papelera está vacía.</div>';
-        return;
-      }
-
-      let html = `<button class="btn-action btn-delete" style="width:100%; margin-bottom: 10px;" onclick="vaciarPapelera()">🗑️ Vaciar Todo Definitivamente</button>`;
-      
-      papelera.forEach(v => {
-        html += `
-          <div class="cliente-item status-pendiente" style="border-color: var(--border-color);">
-            <div class="item-header">
-              <span class="client-name" style="color: var(--text-muted); text-decoration: line-through;">${v.cliente}</span>
-              <button class="btn-restore" onclick="restaurar(${v.id})">🔄 Restaurar</button>
-            </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Fragancia: ${v.fragancia} | Total: C$ ${v.total}</div>
+      div.innerHTML = `
+        <div class="article-row-top">
+          <input type="text" class="upper-input art-name-inp" list="inventory-datalist" placeholder="NOMBRE DE LA FRAGANCIA..." value="${nameVal}" required>
+          <button type="button" class="mic-btn" style="width:40px; height:40px;" onclick="dictateDynamicInput(this)" title="Dictar fragancia">🎙️</button>
+        </div>
+        <div class="article-row-bottom">
+          <div>
+            <label style="font-size:0.62rem;">Cant.</label>
+            <input type="text" inputmode="numeric" class="art-qty-inp" placeholder="1" value="${qtyVal}" required>
           </div>
-        `;
+          <div>
+            <label style="font-size:0.62rem;">Precio Unit. (C$)</label>
+            <input type="text" inputmode="decimal" class="art-price-inp" placeholder="Precio" value="${priceVal}" required>
+          </div>
+          <div style="padding-top:14px;">
+            <button type="button" class="btn-remove-row" style="width:100%;" onclick="removeArticleRow('${rowId}', '${containerId}')" title="Quitar">✕</button>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(div);
+
+      const nameInp = div.querySelector('.art-name-inp');
+      const qtyInp = div.querySelector('.art-qty-inp');
+      const priceInp = div.querySelector('.art-price-inp');
+
+      enforceUppercase(nameInp);
+      enforceNumeric(qtyInp, false);
+      enforceNumeric(priceInp, true);
+
+      nameInp.addEventListener('change', () => {
+        const match = inventory.find(i => i.name === nameInp.value.trim().toUpperCase());
+        if (match && !priceInp.value) {
+          priceInp.value = match.price;
+          recalculateContainerTotal(containerId);
+        }
       });
-      contenedor.innerHTML = html;
+
+      qtyInp.addEventListener('input', () => recalculateContainerTotal(containerId));
+      priceInp.addEventListener('input', () => recalculateContainerTotal(containerId));
+
+      recalculateContainerTotal(containerId);
     }
 
-    function setFiltro(filtro) {
-      filtroActual = filtro;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`tab-${filtro}`).classList.add('active');
-      
-      if (filtro === 'rankings') {
-        document.getElementById('listaClientes').style.display = 'none';
-        document.getElementById('seccionRegistro').style.display = 'none';
-        document.getElementById('seccionBuscador').style.display = 'none';
-        document.getElementById('seccionRankings').style.display = 'block';
-        renderRankings();
-      } else {
-        document.getElementById('listaClientes').style.display = 'block';
-        document.getElementById('seccionRegistro').style.display = 'block';
-        document.getElementById('seccionBuscador').style.display = 'block';
-        document.getElementById('seccionRankings').style.display = 'none';
-        render();
+    function dictateDynamicInput(btn) {
+      const inp = btn.parentElement.querySelector('.art-name-inp');
+      if (!inp.id) inp.id = 'dyn_inp_' + Date.now();
+      startVoiceDictation(inp.id, btn);
+    }
+
+    function removeArticleRow(rowId, containerId) {
+      const container = document.getElementById(containerId);
+      if (container.children.length <= 1) {
+        alert('Debe haber al menos una fragancia o artículo en la cuenta.');
+        return;
+      }
+      const el = document.getElementById(rowId);
+      if (el) el.remove();
+      recalculateContainerTotal(containerId);
+    }
+
+    function recalculateContainerTotal(containerId) {
+      const container = document.getElementById(containerId);
+      let total = 0;
+      container.querySelectorAll('.article-builder-row').forEach(row => {
+        const q = parseFloat(row.querySelector('.art-qty-inp').value) || 0;
+        const p = parseFloat(row.querySelector('.art-price-inp').value) || 0;
+        total += q * p;
+      });
+
+      if (containerId === 'sale-articles-container') {
+        document.getElementById('sale-total-display').innerText = `C$ ${formatMoney(total)}`;
+      } else if (containerId === 'edit-articles-container') {
+        document.getElementById('edit-total-display').innerText = `C$ ${formatMoney(total)}`;
       }
     }
 
-    function guardarEnStorage() {
-      localStorage.setItem('ventas_fragancias_v2', JSON.stringify(ventas));
-      localStorage.setItem('papelera_fragancias_v2', JSON.stringify(papelera));
-      localStorage.setItem('ranking_permanente_perfumes_v2', JSON.stringify(rankingPermanenteFragancias));
-    }
-
-    function actualizarMetricas() {
-      let totalCobrado = 0;
-      let totalPendiente = 0;
-
-      ventas.forEach(v => {
-        totalCobrado += v.abonos;
-        totalPendiente += (v.total - v.abonos);
+    function collectArticlesFromContainer(containerId) {
+      const container = document.getElementById(containerId);
+      const list = [];
+      container.querySelectorAll('.article-builder-row').forEach(row => {
+        const name = row.querySelector('.art-name-inp').value.trim().toUpperCase();
+        const qty = parseInt(row.querySelector('.art-qty-inp').value, 10) || 1;
+        const price = parseFloat(row.querySelector('.art-price-inp').value) || 0;
+        if (name) {
+          list.push({ name, qty, price });
+        }
       });
-
-      document.getElementById('metricCobrado').textContent = `C$ ${totalCobrado}`;
-      document.getElementById('metricPendiente').textContent = `C$ ${totalPendiente}`;
+      return list;
     }
 
-    function obtenerInfoRango(totalCompras) {
-      let rango = "Bronce";
-      let claseRango = "rango-bronce";
-
-      if (totalCompras >= 15) { rango = "VIP Gold"; claseRango = "rango-vip"; }
-      else if (totalCompras >= 10) { rango = "Oro"; claseRango = "rango-oro"; }
-      else if (totalCompras >= 5) { rango = "Plata"; claseRango = "rango-plata"; }
-
-      let progresoEnCiclo = totalCompras % 5;
-      if (progresoEnCiclo === 0 && totalCompras > 0) progresoEnCiclo = 5;
-
-      return { rango, claseRango, progresoEnCiclo };
-    }
-
-    function renderRankings() {
-      const contFragancias = document.getElementById('rankingFraganciasContenedor');
-      const contClientes = document.getElementById('rankingClientesContenedor');
-      
-      // Ranking agrupado permanentemente
-      let arrFragancias = Object.keys(rankingPermanenteFragancias)
-        .map(k => ({ nombre: k, cantidad: rankingPermanenteFragancias[k] }))
-        .sort((a,b) => b.cantidad - a.cantidad);
-
-      let conteoClientes = {};
-      ventas.forEach(v => {
-        let c = v.cliente.trim();
-        conteoClientes[c] = (conteoClientes[c] || 0) + 1;
+    function adjustInventoryStock(articlesList, factor) {
+      articlesList.forEach(art => {
+        const idx = inventory.findIndex(i => i.name.trim().toUpperCase() === art.name.trim().toUpperCase());
+        if (idx !== -1) {
+          inventory[idx].qty = Math.max(0, (parseInt(inventory[idx].qty, 10) || 0) + (art.qty * factor));
+        }
       });
-
-      let arrClientes = Object.keys(conteoClientes).map(k => ({ nombre: k, cantidad: conteoClientes[k] })).sort((a,b) => b.cantidad - a.cantidad);
-
-      let maxFragancias = arrFragancias.length > 0 ? arrFragancias[0].cantidad : 1;
-
-      if(arrFragancias.length === 0) {
-        contFragancias.innerHTML = '<div class="empty-state">No hay ventas registradas aún.</div>';
-      } else {
-        let htmlF = '';
-        arrFragancias.forEach(item => {
-          let porcentaje = (item.cantidad / maxFragancias) * 100;
-          htmlF += `
-            <div class="rank-item">
-              <div class="rank-info">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span>${item.nombre}</span>
-                  <button class="btn-edit-name" onclick="editarNombreFragancia('${item.nombre.replace(/'/g, "\\'")}')" title="Editar y unificar nombre">✏️</button>
-                </div>
-                <span>${item.cantidad} und</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill fill-fragancia" style="width: ${porcentaje}%"></div>
-              </div>
-            </div>
-          `;
-        });
-        contFragancias.innerHTML = htmlF;
-      }
-
-      if(arrClientes.length === 0) {
-        contClientes.innerHTML = '<div class="empty-state">No hay clientes registrados aún.</div>';
-      } else {
-        let htmlC = '';
-        arrClientes.forEach(item => {
-          let infoRango = obtenerInfoRango(item.cantidad);
-          let porcentajeBarra = (infoRango.progresoEnCiclo / 5) * 100;
-          let listoRegalo = (item.cantidad % 5 === 0 && item.cantidad > 0);
-
-          htmlC += `
-            <div class="rank-item">
-              <div class="rank-info">
-                <span>${item.nombre} <span class="badge-rango ${infoRango.claseRango}">${infoRango.rango}</span></span>
-                <span style="color: ${listoRegalo ? 'var(--accent-rose)' : 'var(--text-muted)'}">${item.cantidad} totales (${infoRango.progresoEnCiclo}/5 meta)</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill fill-cliente" style="width: ${porcentajeBarra}%; background: ${listoRegalo ? 'var(--accent-rose)' : ''}"></div>
-              </div>
-              ${listoRegalo ? '<div class="vip-alert">🎁 ¡Premio ganado! Entregar obsequio.</div>' : ''}
-            </div>
-          `;
-        });
-        contClientes.innerHTML = htmlC;
-      }
     }
 
-    function render() {
-      actualizarMetricas();
-      if(filtroActual === 'rankings') return;
+    // =========================================================================
+    // 8. GUARDAR NUEVA VENTA + PRIMA INICIAL
+    // =========================================================================
+    document.getElementById('new-sale-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const clientName = document.getElementById('sale-client').value.trim().toUpperCase();
+      const articles = collectArticlesFromContainer('sale-articles-container');
 
-      const contenedor = document.getElementById('listaClientes');
-      const busqueda = document.getElementById('searchInput').value.toLowerCase();
-
-      contenedor.innerHTML = '';
-
-      let listaFiltrada = ventas.filter(v => {
-        const coincideNombre = v.cliente.toLowerCase().includes(busqueda) || v.fragancia.toLowerCase().includes(busqueda);
-        const saldo = v.total - v.abonos;
-
-        if (!coincideNombre) return false;
-        
-        if (filtroActual === 'pendientes') return saldo > 0;
-        if (filtroActual === 'cancelados') return saldo <= 0;
-
-        return true;
-      });
-
-      if (listaFiltrada.length === 0) {
-        contenedor.innerHTML = '<div class="empty-state">No hay registros para mostrar.</div>';
+      if (!clientName || articles.length === 0) {
+        alert('Ingresá el nombre del cliente y al menos una fragancia.');
         return;
       }
 
-      listaFiltrada.forEach(v => {
-        const saldo = v.total - v.abonos;
-        const cancelado = saldo <= 0;
+      const primaVal = parseFloat(document.getElementById('sale-prima').value) || 0;
+      const saleDate = document.getElementById('sale-date').value.trim() || getNowDateStr();
+      const saleTime = document.getElementById('sale-time').value.trim() || getNowTimeStr();
 
-        const keyCliente = v.cliente.trim().toLowerCase();
-        const totalComprasCliente = ventas.filter(x => x.cliente.trim().toLowerCase() === keyCliente).length;
-        const infoRango = obtenerInfoRango(totalComprasCliente);
+      const payments = [];
+      if (primaVal > 0) {
+        payments.push({
+          id: Date.now() + 1,
+          label: 'PRIMA INICIAL',
+          amount: primaVal,
+          date: saleDate,
+          time: saleTime
+        });
+      }
 
-        const card = document.createElement('div');
-        card.className = `cliente-item ${cancelado ? 'status-cancelado' : 'status-pendiente'}`;
+      const newSale = {
+        id: Date.now(),
+        clientName,
+        articles,
+        payments,
+        createdAt: `${saleDate} ${saleTime}`
+      };
 
-        let historialHTML = '';
-        if (v.historialAbonos && v.historialAbonos.length > 0) {
-          historialHTML = v.historialAbonos.map(h => `
-            <div class="abono-row">
-              <span class="abono-monto">+ C$ ${h.monto}</span>
-              <span class="abono-fecha">🕒 ${h.fecha}</span>
+      adjustInventoryStock(articles, -1);
+
+      sales.unshift(newSale);
+      playCyberSound('action');
+      saveAllData();
+
+      document.getElementById('new-sale-form').reset();
+      document.getElementById('sale-articles-container').innerHTML = '';
+      addSaleArticleRow('sale-articles-container');
+      switchTab('clientes');
+    });
+
+    // =========================================================================
+    // 9. RENDERIZADO DE TARJETAS DE CLIENTES, ABONOS Y WHATSAPP
+    // =========================================================================
+    function getSaleTotals(sale) {
+      const total = sale.articles.reduce((acc, a) => acc + (a.qty * a.price), 0);
+      const paid = sale.payments.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0);
+      const remaining = Math.max(0, total - paid);
+      return { total, paid, remaining, isPaid: remaining <= 0 };
+    }
+
+    function setClientFilter(filter) {
+      currentClientFilter = filter;
+      document.getElementById('f-pending').className = 'filter-pill' + (filter === 'PENDING' ? ' active-gold' : '');
+      document.getElementById('f-paid').className = 'filter-pill' + (filter === 'PAID' ? ' active-green' : '');
+      document.getElementById('f-all').className = 'filter-pill' + (filter === 'ALL' ? ' active-rose' : '');
+      renderClients();
+    }
+
+    function renderClients() {
+      const listEl = document.getElementById('clients-list');
+      const query = document.getElementById('client-search').value.trim().toUpperCase();
+
+      let totalPendingMoney = 0;
+      let totalPaidMoney = 0;
+      let countPending = 0;
+      let countPaid = 0;
+
+      sales.forEach(s => {
+        const { paid, remaining, isPaid } = getSaleTotals(s);
+        totalPendingMoney += remaining;
+        totalPaidMoney += paid;
+        if (isPaid) countPaid++;
+        else countPending++;
+      });
+
+      const totalInvUnits = inventory.reduce((acc, item) => acc + (parseInt(item.qty, 10) || 0), 0);
+
+      document.getElementById('m-pending-money').innerText = `C$ ${formatMoney(totalPendingMoney)}`;
+      document.getElementById('m-paid-money').innerText = `C$ ${formatMoney(totalPaidMoney)}`;
+      document.getElementById('m-inv-units').innerText = totalInvUnits;
+
+      document.getElementById('c-pending').innerText = countPending;
+      document.getElementById('c-paid').innerText = countPaid;
+      document.getElementById('c-all').innerText = sales.length;
+
+      const filtered = sales.filter(s => {
+        const { isPaid } = getSaleTotals(s);
+        if (currentClientFilter === 'PENDING' && isPaid) return false;
+        if (currentClientFilter === 'PAID' && !isPaid) return false;
+
+        if (!query) return true;
+        const matchClient = s.clientName.includes(query);
+        const matchArticle = s.articles.some(a => a.name.includes(query));
+        return matchClient || matchArticle;
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 12px; font-weight:700;">No hay registros para mostrar en esta vista.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      filtered.forEach(sale => {
+        const { total, paid, remaining, isPaid } = getSaleTotals(sale);
+
+        const articlesHtml = sale.articles.map(a => `
+          <div class="article-line-item">
+            <span>${a.qty}x ${a.name}</span>
+            <span style="color:var(--neon-gold);">C$ ${formatMoney(a.qty * a.price)}</span>
+          </div>
+        `).join('');
+
+        let paymentsHtml = `<div style="text-align:center; color:var(--text-muted); font-size:0.75rem; padding:6px 0;">Ningún abono registrado todavía</div>`;
+        if (sale.payments.length > 0) {
+          paymentsHtml = sale.payments.map((p, idx) => `
+            <div class="payment-row">
+              <div>
+                <div style="font-weight:800; color:var(--text);">
+                  ${idx === 0 && p.label === 'PRIMA INICIAL' ? 'PRIMA' : `ABONO #${idx + 1}`}:
+                  <span style="color:var(--neon-green);">C$ ${formatMoney(p.amount)}</span>
+                </div>
+                <div class="payment-meta">📅 ${p.date} &nbsp;•&nbsp; ⏰ ${p.time}</div>
+              </div>
+              <div class="payment-actions">
+                <button type="button" class="mini-icon-btn" style="color:var(--neon-cyan);" onclick="openPaymentModal(${sale.id}, ${p.id})" title="Editar fecha, hora o monto">✏️</button>
+                <button type="button" class="mini-icon-btn" style="color:var(--neon-red);" onclick="deletePayment(${sale.id}, ${p.id})" title="Borrar abono">✕</button>
+              </div>
             </div>
           `).join('');
-        } else {
-          historialHTML = '<div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; padding: 4px 0;">Ningún abono registrado todavía</div>';
         }
 
+        const card = document.createElement('div');
+        card.className = `client-card ${isPaid ? 'status-paid' : 'status-pending'}`;
         card.innerHTML = `
-          <div class="item-header">
-            <div class="client-name-container">
-              <span class="client-name">${v.cliente}</span>
-              <button class="btn-edit-name" onclick="editarNombreCliente('${v.cliente.replace(/'/g, "\\'")}')" title="Editar nombre">✏️</button>
-              <span class="badge-rango ${infoRango.claseRango}">${infoRango.rango}</span>
+          <div class="client-header">
+            <div class="client-name-wrap">
+              <span class="client-name">${sale.clientName}</span>
+              <button type="button" class="edit-pencil-btn" onclick="openEditSaleModal(${sale.id})" title="Editar cliente o agregar más fragancias">✏️</button>
             </div>
-            <span class="badge ${cancelado ? 'badge-cancelado' : 'badge-pendiente'}">
-              ${cancelado ? 'CANCELADO 😊' : 'PENDIENTE 🙁'}
+            <span class="status-pill ${isPaid ? 'paid' : 'pending'}">
+              ${isPaid ? 'CANCELADO 😎' : 'PENDIENTE 😕'}
             </span>
           </div>
 
-          <div class="item-details">
-            <div class="detail-row">
-              <span class="detail-label">Fragancia</span>
-              <span class="detail-val" style="color:#e2e8f0;">${v.fragancia}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Monto Total</span>
-              <span class="detail-val">C$ ${v.total}</span>
-            </div>
-            <div class="detail-row" style="grid-column: span 2;">
-              <span class="detail-label">Saldo Restante</span>
-              <span class="detail-val" style="color:${cancelado ? 'var(--accent-emerald)' : 'var(--accent-gold)'}; font-weight: 800; font-size: 1rem;">C$ ${saldo}</span>
+          <div class="client-inner-panel">
+            <div class="money-box-lbl" style="margin-bottom:4px;">Fragancias / Artículos (${sale.articles.length})</div>
+            <div class="articles-summary-list">${articlesHtml}</div>
+
+            <div class="money-grid">
+              <div>
+                <div class="money-box-lbl">Valor Total</div>
+                <div class="money-box-val" style="color:var(--text);">C$ ${formatMoney(total)}</div>
+              </div>
+              <div>
+                <div class="money-box-lbl">Saldo Restante</div>
+                <div class="money-box-val" style="color:${isPaid ? 'var(--neon-green)' : 'var(--neon-gold)'};">C$ ${formatMoney(remaining)}</div>
+              </div>
             </div>
 
-            <div class="abonos-section">
-              <div class="abonos-header">
-                <span class="abonos-title">📝 Registro de Pagos</span>
-                <span class="abonos-total">Total Abonado: C$ ${v.abonos}</span>
+            <div class="payments-divider">
+              <div class="payments-header">
+                <span style="color:var(--text-muted);">📝 REGISTRO DE PAGOS</span>
+                <span style="color:var(--neon-green);">Total Abonado: C$ ${formatMoney(paid)}</span>
               </div>
-              <div>${historialHTML}</div>
+              ${paymentsHtml}
             </div>
           </div>
 
-          <div class="actions-grid">
-            ${!cancelado ? `
-              <button class="btn-action btn-abono-200" onclick="abonarPersonalizado(${v.id})">+ Ingresar Abono</button>
-            ` : ''}
-            <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp(${v.id})">📲 WhatsApp</button>
-            <button class="btn-action btn-delete" onclick="eliminar(${v.id})">🗑️</button>
+          <div class="client-footer-btns">
+            <button type="button" class="btn-abono" onclick="openPaymentModal(${sale.id}, null)">+ Ingresar Abono</button>
+            <button type="button" class="btn-wa" onclick="sendClientWhatsApp(${sale.id})">📲 WhatsApp</button>
+            <button type="button" class="btn-trash" onclick="deleteSale(${sale.id})" title="Eliminar cuenta">🗑️</button>
           </div>
         `;
-
-        contenedor.appendChild(card);
+        listEl.appendChild(card);
       });
     }
 
-    render();
+    // =========================================================================
+    // 10. MODAL DE ABONOS (NUEVO ABONO O EDICIÓN CON LÁPIZ)
+    // =========================================================================
+    let activeRemainingForModal = 0;
+
+    function openPaymentModal(saleId, paymentId = null) {
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+
+      const { total, paid, remaining } = getSaleTotals(sale);
+      activeRemainingForModal = remaining;
+
+      document.getElementById('pay-sale-id').value = saleId;
+      document.getElementById('pay-item-id').value = paymentId || '';
+
+      if (paymentId) {
+        const payObj = sale.payments.find(p => p.id === paymentId);
+        if (!payObj) return;
+        document.getElementById('pay-modal-title').innerText = '✏️ Editar Abono / Prima';
+        document.getElementById('pay-modal-client-info').innerText = `Cliente: ${sale.clientName} | Valor Total: C$ ${formatMoney(total)}`;
+        document.getElementById('pay-amount').value = payObj.amount;
+        document.getElementById('pay-date').value = payObj.date;
+        document.getElementById('pay-time').value = payObj.time;
+        document.getElementById('btn-fill-rest').style.display = 'none';
+      } else {
+        document.getElementById('pay-modal-title').innerText = '💵 Ingresar Abono';
+        document.getElementById('pay-modal-client-info').innerText = `Cliente: ${sale.clientName} | Saldo Restante: C$ ${formatMoney(remaining)}`;
+        document.getElementById('pay-amount').value = '';
+        document.getElementById('pay-date').value = getNowDateStr();
+        document.getElementById('pay-time').value = getNowTimeStr();
+        document.getElementById('btn-fill-rest').style.display = remaining > 0 ? 'inline-block' : 'none';
+      }
+
+      document.getElementById('payment-modal').classList.add('active');
+    }
+
+    function fillRemainingAmount() {
+      document.getElementById('pay-amount').value = activeRemainingForModal;
+    }
+
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const saleId = parseInt(document.getElementById('pay-sale-id').value, 10);
+      const payIdRaw = document.getElementById('pay-item-id').value;
+      const amount = parseFloat(document.getElementById('pay-amount').value) || 0;
+      const date = document.getElementById('pay-date').value.trim() || getNowDateStr();
+      const time = document.getElementById('pay-time').value.trim() || getNowTimeStr();
+
+      if (amount <= 0) {
+        alert('Ingresá un monto mayor a 0.');
+        return;
+      }
+
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+
+      if (payIdRaw) {
+        const payId = parseInt(payIdRaw, 10);
+        sale.payments = sale.payments.map(p => p.id === payId ? { ...p, amount, date, time } : p);
+      } else {
+        sale.payments.push({
+          id: Date.now(),
+          label: `ABONO #${sale.payments.length + 1}`,
+          amount,
+          date,
+          time
+        });
+      }
+
+      playCyberSound('action');
+      closeModal('payment-modal');
+      saveAllData();
+    });
+
+    function deletePayment(saleId, payId) {
+      if (!confirm('¿Eliminar este abono del historial?')) return;
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+      sale.payments = sale.payments.filter(p => p.id !== payId);
+      playCyberSound('delete');
+      saveAllData();
+    }
+
+    // =========================================================================
+    // 11. MODAL EDITAR CLIENTE Y AGREGAR MÁS FRAGANCIAS SIN LÍMITE
+    // =========================================================================
+    function openEditSaleModal(saleId) {
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+
+      document.getElementById('edit-sale-id').value = sale.id;
+      document.getElementById('edit-sale-client').value = sale.clientName;
+
+      const container = document.getElementById('edit-articles-container');
+      container.innerHTML = '';
+      sale.articles.forEach(art => {
+        addSaleArticleRow('edit-articles-container', art);
+      });
+
+      document.getElementById('edit-sale-modal').classList.add('active');
+    }
+
+    document.getElementById('edit-sale-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const saleId = parseInt(document.getElementById('edit-sale-id').value, 10);
+      const newClient = document.getElementById('edit-sale-client').value.trim().toUpperCase();
+      const newArticles = collectArticlesFromContainer('edit-articles-container');
+
+      if (!newClient || newArticles.length === 0) {
+        alert('El cliente debe tener nombre y al menos una fragancia.');
+        return;
+      }
+
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+
+      adjustInventoryStock(sale.articles, +1);
+      adjustInventoryStock(newArticles, -1);
+
+      sale.clientName = newClient;
+      sale.articles = newArticles;
+
+      playCyberSound('action');
+      closeModal('edit-sale-modal');
+      saveAllData();
+    });
+
+    function deleteSale(saleId) {
+      if (!confirm('¿Eliminar toda la cuenta de este cliente? Las fragancias volverán al inventario disponible.')) return;
+      const sale = sales.find(s => s.id === saleId);
+      if (sale) {
+        adjustInventoryStock(sale.articles, +1);
+      }
+      sales = sales.filter(s => s.id !== saleId);
+      playCyberSound('delete');
+      saveAllData();
+    }
+
+    // =========================================================================
+    // 12. ESTADO DE CUENTA POR WHATSAPP (SIN PREMIOS, ESTILO JESSY FRAGANCIA)
+    // =========================================================================
+    function sendClientWhatsApp(saleId) {
+      const sale = sales.find(s => s.id === saleId);
+      if (!sale) return;
+
+      const { total, paid, remaining, isPaid } = getSaleTotals(sale);
+
+      let msg = `✨ *JESSY FRAGANCIA — ESTADO DE CUENTA* ✨\n`;
+      msg += `👤 *Cliente:* ${sale.clientName}\n\n`;
+
+      msg += `🧪 *FRAGANCIAS / ARTÍCULOS:*\n`;
+      sale.articles.forEach(a => {
+        msg += `• ${a.qty}x ${a.name} — C$ ${formatMoney(a.qty * a.price)}\n`;
+      });
+
+      msg += `\n💰 *Valor Total:* C$ ${formatMoney(total)}\n\n`;
+
+      msg += `📝 *HISTORIAL DE ABONOS:*\n`;
+      if (sale.payments.length === 0) {
+        msg += `• Sin abonos registrados aún.\n`;
+      } else {
+        sale.payments.forEach((p, idx) => {
+          const etiqueta = idx === 0 && p.label === 'PRIMA INICIAL' ? 'Prima' : `Abono #${idx + 1}`;
+          msg += `• ${etiqueta}: *C$ ${formatMoney(p.amount)}* — 📅 ${p.date} ⏰ ${p.time}\n`;
+        });
+      }
+
+      msg += `\n✅ *Total Abonado:* C$ ${formatMoney(paid)}\n`;
+      if (isPaid) {
+        msg += `🎉 *Saldo Restante:* C$ 0 *(CANCELADO ✅)*\n\n`;
+        msg += `✨ _¡Cuenta cancelada con éxito! Muchas gracias por preferirnos y por su confianza en Jessy Fragancia, estamos siempre a la orden._ 🙌`;
+      } else {
+        msg += `⏳ *Saldo Restante:* *C$ ${formatMoney(remaining)}*\n\n`;
+        msg += `✨ _¡Muchas gracias por preferirnos! En Jessy Fragancia valoramos mucho su confianza, estamos siempre a la orden._ 🙌`;
+      }
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // =========================================================================
+    // 13. INVENTARIO DISPONIBLE (BODEGA)
+    // =========================================================================
+    document.getElementById('inv-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const idRaw = document.getElementById('inv-id').value;
+      const code = document.getElementById('inv-code').value.trim().toUpperCase();
+      const name = document.getElementById('inv-name').value.trim().toUpperCase();
+      const qty = parseInt(document.getElementById('inv-qty').value, 10) || 0;
+      const minQty = parseInt(document.getElementById('inv-min').value, 10) || 0;
+      const cost = parseFloat(document.getElementById('inv-cost').value) || 0;
+      const price = parseFloat(document.getElementById('inv-price').value) || 0;
+
+      if (!name) return;
+
+      if (idRaw) {
+        const id = parseInt(idRaw, 10);
+        inventory = inventory.map(item => item.id === id ? { ...item, code, name, qty, minQty, cost, price } : item);
+      } else {
+        const existing = inventory.find(i => i.name === name || (code && i.code === code));
+        if (existing) {
+          if (confirm(`La fragancia "${existing.name}" ya existe con ${existing.qty} unidades. ¿Sumarle estas ${qty} unidades al stock actual?`)) {
+            existing.qty += qty;
+            if (price > 0) existing.price = price;
+            if (cost > 0) existing.cost = cost;
+            playCyberSound('action');
+            resetInvForm();
+            saveAllData();
+            return;
+          }
+        }
+        inventory.unshift({
+          id: Date.now(),
+          code: code || `JF-${String(inventory.length + 1).padStart(3, '0')}`,
+          name,
+          qty,
+          minQty,
+          cost,
+          price
+        });
+      }
+
+      playCyberSound('action');
+      resetInvForm();
+      saveAllData();
+    });
+
+    function editInventoryItem(id) {
+      const item = inventory.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById('inv-id').value = item.id;
+      document.getElementById('inv-code').value = item.code;
+      document.getElementById('inv-name').value = item.name;
+      document.getElementById('inv-qty').value = item.qty;
+      document.getElementById('inv-min').value = item.minQty;
+      document.getElementById('inv-cost').value = item.cost || '';
+      document.getElementById('inv-price').value = item.price || '';
+
+      document.getElementById('inv-form-title').innerText = '✏️ Editar Fragancia en Bodega';
+      document.getElementById('inv-save-btn').innerText = 'Actualizar Fragancia';
+      document.getElementById('inv-cancel-btn').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetInvForm() {
+      document.getElementById('inv-form').reset();
+      document.getElementById('inv-id').value = '';
+      document.getElementById('inv-min').value = '3';
+      document.getElementById('inv-form-title').innerText = '🧪 Registrar Fragancia en Bodega';
+      document.getElementById('inv-save-btn').innerText = 'Guardar en Inventario';
+      document.getElementById('inv-cancel-btn').style.display = 'none';
+    }
+
+    function adjustInvQtyQuick(id, delta) {
+      inventory = inventory.map(i => i.id === id ? { ...i, qty: Math.max(0, (parseInt(i.qty, 10) || 0) + delta) } : i);
+      saveAllData();
+    }
+
+    function deleteInventoryItem(id) {
+      if (!confirm('¿Eliminar esta fragancia del inventario?')) return;
+      inventory = inventory.filter(i => i.id !== id);
+      playCyberSound('delete');
+      saveAllData();
+    }
+
+    function renderInventory() {
+      const listEl = document.getElementById('inventory-list');
+      const query = document.getElementById('inv-search').value.trim().toUpperCase();
+
+      const filtered = inventory.filter(i =>
+        !query || i.name.includes(query) || (i.code && i.code.includes(query))
+      );
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:26px;">No hay fragancias registradas en inventario.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      filtered.forEach(item => {
+        let statusClass = 'stock-ok';
+        let badgeColor = 'var(--neon-green)';
+        let badgeText = `DISPONIBLE: ${item.qty}`;
+
+        if (item.qty === 0) {
+          statusClass = 'stock-out';
+          badgeColor = 'var(--neon-red)';
+          badgeText = 'AGOTADO (0)';
+        } else if (item.qty <= item.minQty) {
+          statusClass = 'stock-low';
+          badgeColor = 'var(--neon-gold)';
+          badgeText = `STOCK BAJO: ${item.qty}`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `inv-card ${statusClass}`;
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+            <div>
+              <div style="font-size:0.68rem; color:var(--neon-cyan); font-family:monospace; font-weight:700;">COD: ${item.code}</div>
+              <div style="font-size:0.98rem; font-weight:900; margin-top:2px;">${item.name}</div>
+            </div>
+            <span style="font-size:0.68rem; font-weight:900; padding:4px 9px; border-radius:12px; border:1px solid ${badgeColor}; color:${badgeColor};">
+              ${badgeText}
+            </span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-top:10px; font-size:0.76rem; color:var(--text-muted);">
+            <span>Venta: <strong style="color:var(--text);">C$ ${formatMoney(item.price)}</strong></span>
+            <span>Costo: <strong style="color:var(--text);">C$ ${formatMoney(item.cost)}</strong></span>
+            <span>Mínimo: <strong style="color:var(--text);">${item.minQty}</strong></span>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
+            <button type="button" class="mini-icon-btn" onclick="adjustInvQtyQuick(${item.id}, 1)">+1</button>
+            <button type="button" class="mini-icon-btn" onclick="adjustInvQtyQuick(${item.id}, -1)">-1</button>
+            <button type="button" class="mini-icon-btn" style="color:var(--neon-cyan);" onclick="editInventoryItem(${item.id})">✏️ Editar</button>
+            <button type="button" class="mini-icon-btn" style="color:var(--neon-red);" onclick="deleteInventoryItem(${item.id})">🗑️</button>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // 14. FRAGANCIAS MÁS VENDIDAS (APILADO POR NOMBRE IGUAL + HISTÓRICO)
+    // =========================================================================
+    function renderTopSold() {
+      const listEl = document.getElementById('top-sold-list');
+      const map = new Map();
+
+      sales.forEach(sale => {
+        sale.articles.forEach(art => {
+          const key = art.name.trim().toUpperCase();
+          if (!key) return;
+          if (!map.has(key)) {
+            map.set(key, { name: key, unitsSold: 0, revenue: 0 });
+          }
+          const entry = map.get(key);
+          entry.unitsSold += (parseInt(art.qty, 10) || 0);
+          entry.revenue += ((parseInt(art.qty, 10) || 0) * (parseFloat(art.price) || 0));
+        });
+      });
+
+      // Combinar histórico acumulado previo si hubiera ventas borradas antes
+      Object.keys(historicalFragranceCounts).forEach(histKey => {
+        const cleanKey = histKey.trim().toUpperCase();
+        const histCount = parseInt(historicalFragranceCounts[histKey], 10) || 0;
+        if (cleanKey && histCount > 0) {
+          if (!map.has(cleanKey)) {
+            map.set(cleanKey, { name: cleanKey, unitsSold: histCount, revenue: 0 });
+          } else {
+            const current = map.get(cleanKey);
+            if (histCount > current.unitsSold) {
+              current.unitsSold = histCount;
+            }
+          }
+        }
+      });
+
+      const ranked = Array.from(map.values()).sort((a, b) => b.unitsSold - a.unitsSold);
+
+      if (ranked.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px;">Aún no hay ventas registradas para calcular el ranking.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      ranked.forEach((item, index) => {
+        const invMatch = inventory.find(i => i.name.trim().toUpperCase() === item.name);
+        const stockText = invMatch
+          ? (invMatch.qty <= invMatch.minQty
+              ? `<span style="color:var(--neon-red); font-weight:800;">⚠️ Quedan ${invMatch.qty} en bodega (Resurtir)</span>`
+              : `<span style="color:var(--neon-green); font-weight:700;">En bodega: ${invMatch.qty}</span>`)
+          : `<span style="color:var(--text-muted);">Venta directa</span>`;
+
+        const rankClass = index === 0 ? 'top-1' : index === 1 ? 'top-2' : index === 2 ? 'top-3' : '';
+
+        const card = document.createElement('div');
+        card.className = 'inv-card';
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="rank-badge ${rankClass}">#${index + 1}</div>
+            <div style="flex:1;">
+              <div style="font-size:0.95rem; font-weight:900;">${item.name}</div>
+              <div style="font-size:0.74rem; margin-top:2px;">${stockText}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1rem; font-weight:900; color:var(--neon-gold);">${item.unitsSold} vend.</div>
+              ${item.revenue > 0 ? `<div style="font-size:0.74rem; font-weight:800; color:var(--neon-green);">C$ ${formatMoney(item.revenue)}</div>` : ''}
+            </div>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // 15. ESCÁNER DE CÁMARA INTELIGENTE
+    // =========================================================================
+    function openScanner(mode) {
+      scanMode = mode;
+      document.getElementById('scanner-modal').classList.add('active');
+      html5QrcodeScanner = new Html5Qrcode('reader');
+      html5QrcodeScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 240, height: 150 } },
+        (decodedText) => handleScanResult(decodedText.trim().toUpperCase()),
+        () => {}
+      ).catch(err => {
+        alert('No se pudo abrir la cámara: ' + err);
+        closeScanner();
+      });
+    }
+
+    function handleScanResult(code) {
+      playCyberSound('scanner');
+      closeScanner();
+
+      if (scanMode === 'INV_INPUT') {
+        document.getElementById('inv-code').value = code;
+        return;
+      }
+
+      const invItem = inventory.find(i => i.code === code);
+      if (scanMode === 'SALE_ADD') {
+        if (invItem) {
+          addSaleArticleRow('sale-articles-container', { name: invItem.name, qty: 1, price: invItem.price });
+        } else {
+          alert(`Código "${code}" no encontrado en inventario. Podés escribir la fragancia manualmente.`);
+        }
+        return;
+      }
+
+      if (invItem) {
+        switchTab('inventario');
+        document.getElementById('inv-search').value = invItem.name;
+        renderInventory();
+      } else {
+        if (confirm(`Código "${code}" no está registrado en inventario. ¿Agregarlo ahora?`)) {
+          resetInvForm();
+          document.getElementById('inv-code').value = code;
+          switchTab('inventario');
+        }
+      }
+    }
+
+    function closeScanner() {
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.stop().then(() => {
+          html5QrcodeScanner.clear();
+          document.getElementById('scanner-modal').classList.remove('active');
+        }).catch(() => {
+          document.getElementById('scanner-modal').classList.remove('active');
+        });
+      } else {
+        document.getElementById('scanner-modal').classList.remove('active');
+      }
+    }
+
+    // =========================================================================
+    // 16. NUBE PRIVADA EN TELEGRAM (SUBIR, FIJAR Y RESTAURAR SIN LÍMITES)
+    // =========================================================================
+    function loadTelegramConfig() {
+      document.getElementById('tg-token').value = localStorage.getItem('jf_tg_token') || localStorage.getItem('mt_tg_token') || '';
+      document.getElementById('tg-chat-id').value = localStorage.getItem('jf_tg_chat_id') || localStorage.getItem('mt_tg_chat_id') || '';
+    }
+
+    function toggleTokenVisibility() {
+      const inp = document.getElementById('tg-token');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    function saveTelegramConfig() {
+      const token = document.getElementById('tg-token').value.trim();
+      const chatId = document.getElementById('tg-chat-id').value.trim();
+      if (!token || !chatId) {
+        alert('Ingresá tanto el Token de tu bot como tu Chat ID.');
+        return;
+      }
+      localStorage.setItem('jf_tg_token', token);
+      localStorage.setItem('jf_tg_chat_id', chatId);
+      playCyberSound('action');
+      alert('🔐 ¡Llaves guardadas de forma privada en este teléfono!');
+    }
+
+    async function backupToTelegram() {
+      const token = document.getElementById('tg-token').value.trim() || localStorage.getItem('jf_tg_token') || '';
+      const chatId = document.getElementById('tg-chat-id').value.trim() || localStorage.getItem('jf_tg_chat_id') || '';
+
+      if (!token || !chatId) {
+        alert('Primero pegá tu Token del Bot y tu Chat ID en las casillas de arriba.');
+        return;
+      }
+
+      localStorage.setItem('jf_tg_token', token);
+      localStorage.setItem('jf_tg_chat_id', chatId);
+
+      const btn = document.getElementById('btn-tg-backup');
+      const origText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = '⏳ Subiendo respaldo a Telegram...';
+
+      try {
+        const payload = {
+          app: 'JESSY FRAGANCIA',
+          developer: 'Yoardy Cruz',
+          exportedAt: `${getNowDateStr()} ${getNowTimeStr()}`,
+          sales,
+          inventory
+        };
+        const fileName = `Respaldo_Jessy_Fragancia_${new Date().toISOString().slice(0, 10)}.json`;
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+
+        const formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('document', blob, fileName);
+        formData.append('caption', `✨ Respaldo JESSY FRAGANCIA\n📅 ${payload.exportedAt}\n👥 Clientes: ${sales.length} | 🧪 Bodega: ${inventory.length} frag.`);
+
+        const res = await fetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (!data.ok) {
+          throw new Error(data.description || 'Telegram rechazó el envío.');
+        }
+
+        const msgId = data.result.message_id;
+        await fetch(`https://api.telegram.org/bot${token}/pinChatMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: msgId,
+            disable_notification: true
+          })
+        });
+
+        playCyberSound('action');
+        alert('✅ ¡Respaldo de Jessy Fragancia guardado y fijado en tu chat privado de Telegram!');
+      } catch (err) {
+        alert('❌ No se pudo guardar en Telegram: ' + err.message + '\n\nRevisá tu conexión o confirmá que hayas presionado INICIAR (/start) dentro de tu bot en Telegram.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = origText;
+      }
+    }
+
+    async function restoreFromTelegram() {
+      const token = document.getElementById('tg-token').value.trim() || localStorage.getItem('jf_tg_token') || '';
+      const chatId = document.getElementById('tg-chat-id').value.trim() || localStorage.getItem('jf_tg_chat_id') || '';
+
+      if (!token || !chatId) {
+        alert('Ingresá tu Token del Bot y tu Chat ID para buscar tu respaldo.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-tg-restore');
+      const origText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = '⏳ Buscando copia en Telegram...';
+
+      try {
+        const chatRes = await fetch(`https://api.telegram.org/bot${token}/getChat?chat_id=${encodeURIComponent(chatId)}`);
+        const chatData = await chatRes.json();
+        if (!chatData.ok) {
+          throw new Error(chatData.description || 'No se pudo conectar con tu chat.');
+        }
+
+        const pinned = chatData.result.pinned_message;
+        if (!pinned || !pinned.document) {
+          throw new Error('No hay ningún respaldo fijado en tu bot todavía. Guardá uno primero.');
+        }
+
+        const fileId = pinned.document.file_id;
+        const fileRes = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${encodeURIComponent(fileId)}`);
+        const fileData = await fileRes.json();
+        if (!fileData.ok) {
+          throw new Error(fileData.description || 'No se pudo localizar el archivo en Telegram.');
+        }
+
+        const fileUrl = `https://api.telegram.org/file/bot${token}/${fileData.result.file_path}`;
+        const docRes = await fetch(fileUrl);
+        const backup = await docRes.json();
+
+        if (!Array.isArray(backup.sales) || !Array.isArray(backup.inventory)) {
+          throw new Error('El archivo encontrado no es un respaldo válido.');
+        }
+
+        if (confirm(`Se encontró respaldo del ${backup.exportedAt || 'último guardado'} (${backup.sales.length} clientes y ${backup.inventory.length} fragancias).\n\n¿Restaurar estos datos en la aplicación?`)) {
+          sales = backup.sales;
+          inventory = backup.inventory;
+          saveAllData();
+          playCyberSound('action');
+          alert('✅ ¡Todos tus clientes, abonos e inventario fueron restaurados desde Telegram!');
+        }
+      } catch (err) {
+        alert('❌ Error al restaurar desde Telegram: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = origText;
+      }
+    }
+
+    // =========================================================================
+    // 17. EXPORTACIÓN GENERAL Y COPIA LOCAL (.JSON / .CSV)
+    // =========================================================================
+    function shareGeneralWhatsApp() {
+      let totalPendiente = 0;
+      let totalCobrado = 0;
+      sales.forEach(s => {
+        const t = getSaleTotals(s);
+        totalPendiente += t.remaining;
+        totalCobrado += t.paid;
+      });
+
+      let msg = `✨ *JESSY FRAGANCIA — REPORTE GENERAL* ✨\n`;
+      msg += `📅 Fecha: ${getNowDateStr()} ${getNowTimeStr()}\n\n`;
+      msg += `💰 *Cobrado:* C$ ${formatMoney(totalCobrado)}\n`;
+      msg += `⏳ *Por Cobrar:* C$ ${formatMoney(totalPendiente)}\n`;
+      msg += `🧪 *Fragancias en Bodega:* ${inventory.reduce((a, b) => a + (parseInt(b.qty, 10) || 0), 0)} unids\n\n`;
+
+      const pendingSales = sales.filter(s => !getSaleTotals(s).isPaid);
+      if (pendingSales.length > 0) {
+        msg += `📋 *CLIENTES CON SALDO PENDIENTE:*\n`;
+        pendingSales.forEach(s => {
+          const t = getSaleTotals(s);
+          msg += `• ${s.clientName}: Resta *C$ ${formatMoney(t.remaining)}* (Total C$ ${formatMoney(t.total)})\n`;
+        });
+      }
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function exportExcelCSV() {
+      let csv = '\uFEFFCliente,Estado,Fragancias,ValorTotal,TotalAbonado,SaldoRestante,DetalleAbonos\n';
+      sales.forEach(s => {
+        const { total, paid, remaining, isPaid } = getSaleTotals(s);
+        const arts = s.articles.map(a => `${a.qty}x ${a.name} (C$${a.price})`).join(' | ');
+        const pays = s.payments.map(p => `C$${p.amount} [${p.date} ${p.time}]`).join(' | ');
+        csv += `"${s.clientName}","${isPaid ? 'CANCELADO' : 'PENDIENTE'}","${arts}",${total},${paid},${remaining},"${pays}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `Jessy_Fragancia_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function downloadBackupJSON() {
+      const payload = {
+        app: 'JESSY FRAGANCIA',
+        developer: 'Yoardy Cruz',
+        exportedAt: `${getNowDateStr()} ${getNowTimeStr()}`,
+        sales,
+        inventory
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `Respaldo_Jessy_Fragancia_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function restoreBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (Array.isArray(data.sales) && Array.isArray(data.inventory)) {
+            sales = data.sales;
+            inventory = data.inventory;
+            saveAllData();
+            playCyberSound('action');
+            alert('¡Respaldo restaurado correctamente!');
+          } else {
+            alert('El archivo seleccionado no es un respaldo válido.');
+          }
+        } catch (err) {
+          alert('Error al leer el archivo de respaldo.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // =========================================================================
+    // 18. INICIALIZACIÓN AL CARGAR LA APP
+    // =========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      migrateLegacyJessyData();
+      applySavedTheme();
+      initHeaderPerfumeRain();
+      loadTelegramConfig();
+
+      document.querySelectorAll('.upper-input').forEach(enforceUppercase);
+
+      enforceNumeric(document.getElementById('sale-prima'), true);
+      enforceNumeric(document.getElementById('pay-amount'), true);
+      enforceNumeric(document.getElementById('inv-qty'), false);
+      enforceNumeric(document.getElementById('inv-min'), false);
+      enforceNumeric(document.getElementById('inv-cost'), true);
+      enforceNumeric(document.getElementById('inv-price'), true);
+      enforceNumeric(document.getElementById('tg-chat-id'), false);
+
+      applyDateMask(document.getElementById('sale-date'));
+      applyDateMask(document.getElementById('pay-date'));
+
+      addSaleArticleRow('sale-articles-container');
+
+      saveAllData();
+    });
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Servicio activo: ', reg.scope))
+          .catch(err => console.log('Error SW: ', err));
+      });
+    }
   </script>
 </body>
 </html>
